@@ -4,7 +4,10 @@ services:
     image: uplore:latest
     restart: unless-stopped
     ports:
-      - "127.0.0.1:${PORT:-3000}:3000"
+      # HOST_PORT = the loopback port nginx proxies to; the app always listens
+      # on 3000 INSIDE the container (pinned below, so a stray PORT in .env can't
+      # desync the mapping/healthcheck).
+      - "127.0.0.1:${HOST_PORT:-3000}:3000"
     volumes:
       - uplore_data:/data
     env_file:
@@ -12,6 +15,7 @@ services:
     environment:
       # These defaults are set in the Dockerfile; listed here for visibility.
       # Override in .env to change paths or any other setting.
+      PORT: 3000
       DATABASE_PATH: /data/uplore.db
       UPLOADS_PATH: /data/uploads
     healthcheck:
