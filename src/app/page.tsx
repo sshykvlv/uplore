@@ -1,12 +1,16 @@
 import { getSession } from '@/lib/auth/session'
+import { getFeedIdeas } from '@/lib/queries'
 import Header from '@/components/Header'
+import IdeaCard from '@/components/IdeaCard'
+
+export const dynamic = 'force-dynamic'
 
 /**
- * Home page — Phase A placeholder.
- * Phase B will replace the <main> body with the live feed.
+ * Home page — live feed of ideas sorted by score DESC.
  */
 export default async function HomePage() {
   const user = await getSession()
+  const ideas = getFeedIdeas(user?.id ?? null)
 
   return (
     <>
@@ -15,28 +19,47 @@ export default async function HomePage() {
         style={{
           maxWidth: 720,
           margin: '0 auto',
-          padding: '40px 16px 60px',
-          textAlign: 'center',
+          padding: '10px 16px 60px',
         }}
       >
-        {user ? (
-          <div>
-            <p style={{ fontSize: 18, fontWeight: 600, color: 'var(--ink)', marginBottom: 8 }}>
-              Welcome, {user.display_name ?? user.username ?? 'friend'}!
-            </p>
-            <p style={{ color: 'var(--muted)', fontSize: 15 }}>
-              Feed coming soon — Phase B will show ideas here.
-            </p>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'baseline',
+            gap: 10,
+            padding: '6px 6px 14px',
+          }}
+        >
+          <h1
+            style={{
+              fontSize: 14,
+              fontWeight: 600,
+              color: 'var(--muted)',
+              textTransform: 'uppercase',
+              letterSpacing: '.05em',
+            }}
+          >
+            Ideas · by votes
+          </h1>
+        </div>
+
+        {ideas.length === 0 ? (
+          <div
+            style={{
+              textAlign: 'center',
+              padding: '60px 16px',
+              color: 'var(--muted)',
+            }}
+          >
+            <p style={{ fontSize: 16, marginBottom: 8 }}>No ideas yet.</p>
+            <p style={{ fontSize: 14 }}>Be the first to post one!</p>
           </div>
         ) : (
-          <div>
-            <p style={{ fontSize: 18, fontWeight: 600, color: 'var(--ink)', marginBottom: 8 }}>
-              Feed coming soon
-            </p>
-            <p style={{ color: 'var(--muted)', fontSize: 15 }}>
-              Sign in to start voting and posting ideas.
-            </p>
-          </div>
+          <ul style={{ listStyle: 'none' }}>
+            {ideas.map((idea) => (
+              <IdeaCard key={idea.id} idea={idea} authed={!!user} />
+            ))}
+          </ul>
         )}
       </main>
 

@@ -1,0 +1,219 @@
+import { notFound } from 'next/navigation'
+import Link from 'next/link'
+import { getSession } from '@/lib/auth/session'
+import { getIdeaById, getIdeaComments } from '@/lib/queries'
+import Header from '@/components/Header'
+import VoteCapsule from '@/components/VoteCapsule'
+import ReactionChips from '@/components/ReactionChips'
+import ImageGallery from '@/components/ImageGallery'
+import AddCommentForm from '@/components/AddCommentForm'
+import { relativeTime } from '@/lib/time'
+
+export const dynamic = 'force-dynamic'
+
+function authorLabel(username: string | null, displayName: string | null): string {
+  const name = displayName ?? username
+  if (!name) return '@unknown'
+  return name.startsWith('@') ? name : `@${name}`
+}
+
+interface PageProps {
+  params: { id: string }
+}
+
+export default async function IdeaDetailPage({ params }: PageProps) {
+  const id = parseInt(params.id, 10)
+  if (isNaN(id)) notFound()
+
+  const user = await getSession()
+  const idea = getIdeaById(id, user?.id ?? null)
+  if (!idea) notFound()
+
+  const comments = getIdeaComments(id)
+
+  return (
+    <>
+      <Header user={user} />
+      <main
+        style={{
+          maxWidth: 720,
+          margin: '0 auto',
+          padding: '10px 16px 60px',
+        }}
+      >
+        {/* Back link */}
+        <Link
+          href="/"
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 6,
+            fontSize: 13,
+            color: 'var(--muted)',
+            marginBottom: 20,
+            padding: '4px 0',
+          }}
+        >
+          ← Back to feed
+        </Link>
+
+        {/* Idea card — full detail */}
+        <div
+          style={{
+            background: 'var(--card)',
+            border: '1px solid var(--line)',
+            borderRadius: 'var(--radius)',
+            padding: '20px 22px',
+            marginBottom: 24,
+          }}
+        >
+          <div style={{ display: 'flex', gap: 14, alignItems: 'flex-start' }}>
+            <VoteCapsule
+              ideaId={idea.id}
+              initialScore={idea.score}
+              initialUserVote={idea.user_vote}
+              authed={!!user}
+            />
+
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p
+                style={{
+                  fontSize: 17,
+                  color: 'var(--ink)',
+                  letterSpacing: '-0.005em',
+                  lineHeight: 1.5,
+                  fontWeight: 450,
+                }}
+              >
+                {idea.body}
+              </p>
+
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 12,
+                  fontSize: 13,
+                  color: 'var(--muted)',
+                  marginTop: 12,
+                  flexWrap: 'wrap',
+                }}
+              >
+                <span style={{ fontWeight: 550, color: '#6f6f69' }}>
+                  {authorLabel(idea.username, idea.display_name)}
+                </span>
+                <span
+                  style={{ width: 3, height: 3, borderRadius: '50%', background: '#cfcfca', flexShrink: 0 }}
+                />
+                <span>{relativeTime(idea.created_at)}</span>
+                <span
+                  style={{ width: 3, height: 3, borderRadius: '50%', background: '#cfcfca', flexShrink: 0 }}
+                />
+                <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                  💬 {idea.comment_count}
+                </span>
+              </div>
+
+              <ReactionChips
+                ideaId={idea.id}
+                initialReactions={idea.reactions}
+                authed={!!user}
+              />
+            </div>
+          </div>
+
+          {/* Full image gallery */}
+          <ImageGallery images={idea.images} />
+        </div>
+
+        {/* Comments section */}
+        <section>
+          <h2
+            style={{
+              fontSize: 14,
+              fontWeight: 600,
+              color: 'var(--muted)',
+              textTransform: 'uppercase',
+              letterSpacing: '.05em',
+              marginBottom: 16,
+            }}
+          >
+            Comments · {comments.length}
+          </h2>
+
+          {comments.length === 0 && (
+            <p style={{ fontSize: 14, color: 'var(--muted)', marginBottom: 20 }}>
+              No comments yet. Be the first!
+            </p>
+          )}
+
+          <ul style={{ listStyle: 'none' }}>
+            {comments.map((c) => (
+              <li
+                key={c.id}
+                style={{
+                  borderBottom: '1px solid var(--line)',
+                  padding: '14px 0',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 10,
+                    marginBottom: 8,
+                    fontSize: 13,
+                    color: 'var(--muted)',
+                  }}
+                >
+                  {/* Avatar / initials */}
+                  <div
+                    style={{
+                      width: 28,
+                      height: 28,
+                      borderRadius: '50%',
+                      background: '#d8d8d4',
+                      display: 'grid',
+                      placeItems: 'center',
+                      fontSize: 11,
+                      fontWeight: 600,
+                      color: '#666',
+                      flexShrink: 0,
+                    }}
+                  >
+                    {(c.display_name ?? c.username ?? '?')
+                      .split(/\s+/)
+                      .slice(0, 2)
+                      .map((w: string) => w[0]?.toUpperCase() ?? '')
+                      .join('')}
+                  </div>
+                  <span style={{ fontWeight: 550, color: '#6f6f69' }}>
+                    {authorLabel(c.username, c.display_name)}
+                  </span>
+                  <span
+                    style={{ width: 3, height: 3, borderRadius: '50%', background: '#cfcfca', flexShrink: 0 }}
+                  />
+                  <span>{relativeTime(c.created_at)}</span>
+                </div>
+                <p style={{ fontSize: 14.5, color: 'var(--ink)', lineHeight: 1.5 }}>{c.body}</p>
+              </li>
+            ))}
+          </ul>
+
+          <AddCommentForm ideaId={idea.id} authed={!!user} />
+        </section>
+      </main>
+
+      <footer
+        style={{
+          textAlign: 'center',
+          color: '#bdbdb7',
+          fontSize: 12.5,
+          padding: 24,
+        }}
+      >
+        Uplore · open source
+      </footer>
+    </>
+  )
+}

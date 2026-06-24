@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { SessionUser } from '@/lib/auth/session'
+import NewIdeaModal from '@/components/NewIdeaModal'
 
 interface HeaderProps {
   user: SessionUser | null
@@ -17,6 +18,7 @@ function initials(user: SessionUser): string {
 /**
  * Floating rounded header — matches design-mocks/index.html exactly.
  * Sticky, blurred white, subtle shadow.
+ * "+ New idea" wired to NewIdeaModal (client component).
  */
 export default function Header({ user }: HeaderProps) {
   return (
@@ -77,80 +79,57 @@ export default function Header({ user }: HeaderProps) {
 
         <div style={{ flex: 1 }} />
 
+        {/* New idea modal trigger — always rendered but redirects to /login if not authed */}
+        <NewIdeaModal authed={!!user} />
+
         {user ? (
-          <>
-            {/* Placeholder "+ New idea" — Phase B wires up the modal */}
-            <button
-              disabled
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 8 }}>
+            {user.avatar_url ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={user.avatar_url}
+                alt={user.display_name ?? user.username ?? 'avatar'}
+                width={36}
+                height={36}
+                style={{ borderRadius: '50%', display: 'block', flexShrink: 0 }}
+              />
+            ) : (
+              <div
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: '50%',
+                  background: '#d8d8d4',
+                  display: 'grid',
+                  placeItems: 'center',
+                  fontSize: 13,
+                  fontWeight: 600,
+                  color: '#666',
+                  flexShrink: 0,
+                }}
+              >
+                {initials(user)}
+              </div>
+            )}
+
+            <Link
+              href="/api/auth/logout"
               style={{
                 height: 36,
                 display: 'inline-flex',
                 alignItems: 'center',
-                fontSize: 14,
-                fontWeight: 550,
-                padding: '0 16px',
+                fontSize: 13,
+                fontWeight: 500,
+                padding: '0 12px',
                 borderRadius: 9999,
-                border: '1px solid var(--accent)',
-                background: 'var(--accent)',
-                color: '#fff',
-                cursor: 'not-allowed',
-                opacity: 0.6,
-                boxShadow: '0 2px 10px rgba(232,96,44,.3)',
+                border: '1px solid var(--line)',
+                background: 'var(--card)',
+                color: 'var(--muted)',
               }}
             >
-              + New idea
-            </button>
-
-            {/* Avatar / initials */}
-            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 8 }}>
-              {user.avatar_url ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={user.avatar_url}
-                  alt={user.display_name ?? user.username ?? 'avatar'}
-                  width={36}
-                  height={36}
-                  style={{ borderRadius: '50%', display: 'block', flexShrink: 0 }}
-                />
-              ) : (
-                <div
-                  style={{
-                    width: 36,
-                    height: 36,
-                    borderRadius: '50%',
-                    background: '#d8d8d4',
-                    display: 'grid',
-                    placeItems: 'center',
-                    fontSize: 13,
-                    fontWeight: 600,
-                    color: '#666',
-                    flexShrink: 0,
-                  }}
-                >
-                  {initials(user)}
-                </div>
-              )}
-
-              {/* Logout link */}
-              <Link
-                href="/api/auth/logout"
-                style={{
-                  height: 36,
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  fontSize: 13,
-                  fontWeight: 500,
-                  padding: '0 12px',
-                  borderRadius: 9999,
-                  border: '1px solid var(--line)',
-                  background: 'var(--card)',
-                  color: 'var(--muted)',
-                }}
-              >
-                Sign out
-              </Link>
-            </div>
-          </>
+              Sign out
+            </Link>
+          </div>
         ) : (
           <Link
             href="/login"
