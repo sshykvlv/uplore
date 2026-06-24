@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { analytics } from '@/lib/umami'
 
 const UP_SVG = (
   <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
@@ -75,6 +76,9 @@ export default function VoteCapsule({
         const data = await res.json()
         setScore(data.score)
         setUserVote(data.userVote)
+        // Analytics
+        const dir = newValue === 0 ? 'clear' : newValue === 1 ? 'up' : 'down'
+        analytics.vote(dir)
       }
     } catch {
       setScore(oldScore)

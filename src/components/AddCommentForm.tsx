@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { analytics } from '@/lib/umami'
 
 interface AddCommentFormProps {
   ideaId: number
@@ -42,6 +43,7 @@ export default function AddCommentForm({ ideaId, authed }: AddCommentFormProps) 
         const data = await res.json()
         setError(data.error ?? 'Failed to post comment.')
       } else {
+        analytics.commentPosted()
         setBody('')
         router.refresh()
       }

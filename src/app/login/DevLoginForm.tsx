@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import { analytics } from '@/lib/umami'
 
 /**
  * Client component — submits to /api/auth/dev, then navigates to /.
@@ -32,6 +33,7 @@ export default function DevLoginForm() {
         const json = await res.json().catch(() => ({}))
         throw new Error((json as { error?: string }).error ?? `HTTP ${res.status}`)
       }
+      analytics.signin('dev')
       router.push('/')
       router.refresh()
     } catch (err) {

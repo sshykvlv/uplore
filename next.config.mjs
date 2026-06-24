@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   experimental: {
     // Keep better-sqlite3 as a server-only external package (native module)
     serverComponentsExternalPackages: ['better-sqlite3'],

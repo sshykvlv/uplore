@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import { analytics } from '@/lib/umami'
 
 const EMOJI_PICKER_SET = ['🔥', '🙌', '👀', '💯', '🚀', '👍', '❤️', '😄']
 
@@ -69,6 +70,7 @@ export default function ReactionChips({ ideaId, initialReactions, authed }: Reac
       if (res.ok) {
         const data = await res.json()
         setReactions(data.reactions)
+        analytics.reactionAdded(emoji)
       } else {
         setReactions(prevReactions)
       }

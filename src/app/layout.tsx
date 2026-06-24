@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import UmamiScript from '@/components/UmamiScript'
 
 export const metadata: Metadata = {
   title: 'Uplore',
@@ -14,6 +15,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
+      <head>
+        <UmamiScript />
+      </head>
       <body>{children}</body>
     </html>
   )

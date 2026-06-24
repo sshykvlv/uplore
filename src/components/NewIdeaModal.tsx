@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import { analytics } from '@/lib/umami'
 
 interface NewIdeaModalProps {
   authed: boolean
@@ -54,6 +55,7 @@ export default function NewIdeaModal({ authed }: NewIdeaModalProps) {
         return
       }
       const data = await res.json()
+      analytics.ideaPosted()
       setOpen(false)
       setBody('')
       setFiles([])
