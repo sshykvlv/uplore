@@ -3,7 +3,10 @@ node_modules/
 dist/
 *.db
 *.db-journal
+*.db-shm
+*.db-wal
 /uploads/
+/data/
 .env
 .env.local
 .DS_Store

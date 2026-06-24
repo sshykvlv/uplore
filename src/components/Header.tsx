@@ -1,0 +1,176 @@
+import Link from 'next/link'
+import type { SessionUser } from '@/lib/auth/session'
+
+interface HeaderProps {
+  user: SessionUser | null
+}
+
+function initials(user: SessionUser): string {
+  const name = user.display_name ?? user.username ?? '?'
+  return name
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((w) => w[0]?.toUpperCase() ?? '')
+    .join('')
+}
+
+/**
+ * Floating rounded header — matches design-mocks/index.html exactly.
+ * Sticky, blurred white, subtle shadow.
+ */
+export default function Header({ user }: HeaderProps) {
+  return (
+    <header
+      style={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 10,
+        padding: '14px 16px 6px',
+        background: 'linear-gradient(var(--bg), var(--bg) 65%, rgba(251,251,250,0))',
+      }}
+    >
+      <div
+        style={{
+          maxWidth: 716,
+          margin: '0 auto',
+          padding: '7px 9px 7px 16px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 10,
+          background: 'rgba(255,255,255,.88)',
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          border: '1px solid var(--line)',
+          borderRadius: 16,
+          boxShadow: '0 3px 12px rgba(0,0,0,.045)',
+        }}
+      >
+        {/* Wordmark */}
+        <Link
+          href="/"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 8,
+            fontWeight: 650,
+            fontSize: 18,
+            letterSpacing: '-0.02em',
+          }}
+        >
+          <span
+            style={{
+              width: 22,
+              height: 22,
+              borderRadius: 7,
+              background: 'linear-gradient(150deg,#ff7a45,#e8602c)',
+              display: 'grid',
+              placeItems: 'center',
+              color: '#fff',
+              fontSize: 13,
+              boxShadow: '0 2px 8px rgba(232,96,44,.35)',
+            }}
+          >
+            ✦
+          </span>
+          Uplore
+        </Link>
+
+        <div style={{ flex: 1 }} />
+
+        {user ? (
+          <>
+            {/* Placeholder "+ New idea" — Phase B wires up the modal */}
+            <button
+              disabled
+              style={{
+                height: 36,
+                display: 'inline-flex',
+                alignItems: 'center',
+                fontSize: 14,
+                fontWeight: 550,
+                padding: '0 16px',
+                borderRadius: 9999,
+                border: '1px solid var(--accent)',
+                background: 'var(--accent)',
+                color: '#fff',
+                cursor: 'not-allowed',
+                opacity: 0.6,
+                boxShadow: '0 2px 10px rgba(232,96,44,.3)',
+              }}
+            >
+              + New idea
+            </button>
+
+            {/* Avatar / initials */}
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 8 }}>
+              {user.avatar_url ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={user.avatar_url}
+                  alt={user.display_name ?? user.username ?? 'avatar'}
+                  width={36}
+                  height={36}
+                  style={{ borderRadius: '50%', display: 'block', flexShrink: 0 }}
+                />
+              ) : (
+                <div
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: '50%',
+                    background: '#d8d8d4',
+                    display: 'grid',
+                    placeItems: 'center',
+                    fontSize: 13,
+                    fontWeight: 600,
+                    color: '#666',
+                    flexShrink: 0,
+                  }}
+                >
+                  {initials(user)}
+                </div>
+              )}
+
+              {/* Logout link */}
+              <Link
+                href="/api/auth/logout"
+                style={{
+                  height: 36,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  fontSize: 13,
+                  fontWeight: 500,
+                  padding: '0 12px',
+                  borderRadius: 9999,
+                  border: '1px solid var(--line)',
+                  background: 'var(--card)',
+                  color: 'var(--muted)',
+                }}
+              >
+                Sign out
+              </Link>
+            </div>
+          </>
+        ) : (
+          <Link
+            href="/login"
+            style={{
+              height: 36,
+              display: 'inline-flex',
+              alignItems: 'center',
+              fontSize: 14,
+              fontWeight: 550,
+              padding: '0 16px',
+              borderRadius: 9999,
+              border: '1px solid var(--line)',
+              background: 'var(--card)',
+              color: 'var(--ink)',
+            }}
+          >
+            Sign in
+          </Link>
+        )}
+      </div>
+    </header>
+  )
+}
