@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<style>
+  :root{--line:#ececea;--icon:#b4b4ae;--accent:#e8602c;--accent-soft:#fdeee7}
+  body{font-family:-apple-system,sans-serif;background:#fbfbfa;padding:40px;display:flex;gap:48px;align-items:center}
+  .col{text-align:center}
+  .lbl{font-size:12px;color:#8a8a84;margin-top:14px;text-transform:uppercase;letter-spacing:.05em;font-weight:600}
+  .cap{display:inline-flex;align-items:center;gap:3px;padding:3px 7px;border-radius:999px;
+    border:1px solid var(--line);background:#fff;font-weight:700;font-size:16px;letter-spacing:-.02em}
+  .num{min-width:20px;text-align:center}
+  .vbtn{display:grid;place-items:center;border:none;background:none;padding:6px;border-radius:999px;color:var(--icon);line-height:0}
+  .vbtn svg{display:block}
+  .up-hover .vbtn.up{color:var(--accent);background:var(--accent-soft)}
+  .dn-hover .vbtn.dn{color:#6b6b66;background:#f1f1ef}
+</style></head><body>
+<div class="col">
+  <div class="cap"><button class="vbtn up"><svg width="15" height="15" viewBox="0 0 13 13" fill="none"><path d="M6.5 11V2M6.5 2L3 5.5M6.5 2L10 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="num">142</span><button class="vbtn dn"><svg width="15" height="15" viewBox="0 0 13 13" fill="none"><path d="M6.5 2V11M6.5 11L3 7.5M6.5 11L10 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+  <div class="lbl">idle</div>
+</div>
+<div class="col">
+  <div class="cap up-hover"><button class="vbtn up"><svg width="15" height="15" viewBox="0 0 13 13" fill="none"><path d="M6.5 11V2M6.5 2L3 5.5M6.5 2L10 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="num">142</span><button class="vbtn dn"><svg width="15" height="15" viewBox="0 0 13 13" fill="none"><path d="M6.5 2V11M6.5 11L3 7.5M6.5 11L10 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+  <div class="lbl">hover ↑</div>
+</div>
+<div class="col">
+  <div class="cap dn-hover"><button class="vbtn up"><svg width="15" height="15" viewBox="0 0 13 13" fill="none"><path d="M6.5 11V2M6.5 2L3 5.5M6.5 2L10 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="num">142</span><button class="vbtn dn"><svg width="15" height="15" viewBox="0 0 13 13" fill="none"><path d="M6.5 2V11M6.5 11L3 7.5M6.5 11L10 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+  <div class="lbl">hover ↓</div>
+</div>
+</body></html>

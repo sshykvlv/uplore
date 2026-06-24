@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kindling — vote styles</title>
+<style>
+  :root{
+    --bg:#fbfbfa;--card:#fff;--line:#ececea;--ink:#1a1a18;--muted:#8a8a84;
+    --accent:#e8602c;--accent-soft:#fdeee7;--icon:#b4b4ae;--radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",sans-serif;
+    background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.45;padding:28px 16px 60px}
+  .wrap{max-width:640px;margin:0 auto}
+  h2{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:30px 8px 12px}
+  .note{font-size:13px;color:var(--muted);margin:4px 8px 0}
+
+  /* pill buttons (колбаски) */
+  .pillbtn{font-size:14px;font-weight:550;padding:9px 18px;border-radius:999px;
+    border:1px solid var(--line);background:var(--card);cursor:pointer;transition:.15s}
+  .pillbtn:hover{border-color:#dcdcd8}
+  .pillbtn.primary{background:var(--accent);color:#fff;border-color:var(--accent);box-shadow:0 2px 10px rgba(232,96,44,.32)}
+
+  /* shared card */
+  .idea{display:flex;gap:14px;align-items:center;background:var(--card);border:1px solid var(--line);
+    border-radius:var(--radius);padding:16px 18px;margin-bottom:10px;transition:.15s}
+  .idea:hover{border-color:#ddddd9;box-shadow:0 1px 3px rgba(0,0,0,.03)}
+  .body{flex:1;min-width:0}
+  .title{font-size:16px;font-weight:600;letter-spacing:-.01em;margin-bottom:3px}
+  .desc{font-size:13.5px;color:#54544f}
+
+  .caret{font-size:11px;line-height:1;color:var(--icon);transition:.12s}
+
+  /* ---- A: horizontal capsule ---- */
+  .voteA{display:inline-flex;align-items:center;gap:9px;flex-shrink:0;
+    padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:#fff;
+    cursor:pointer;transition:.15s;font-weight:700;font-size:15px;letter-spacing:-.02em;user-select:none}
+  .voteA:hover{border-color:#dcdcd8}
+  .voteA.on{background:var(--accent-soft);border-color:#f3b79b;color:var(--accent)}
+  .voteA.on .caret.up{color:var(--accent)}
+  .voteA .stack{display:flex;flex-direction:column;gap:2px}
+
+  /* ---- B: vertical capsule (колбаска) ---- */
+  .voteB{display:inline-flex;flex-direction:column;align-items:center;flex-shrink:0;
+    border:1px solid var(--line);border-radius:999px;overflow:hidden;background:#fff;width:40px}
+  .voteB button{border:none;background:none;cursor:pointer;color:var(--icon);
+    padding:9px 0;width:100%;transition:.12s;line-height:0}
+  .voteB button:hover{background:#f6f6f4}
+  .voteB .up.on{color:#fff;background:var(--accent)}
+  .voteB .num{font-size:15px;font-weight:700;padding:4px 0;letter-spacing:-.02em}
+
+  /* ---- C: two pills ---- */
+  .voteC{display:inline-flex;align-items:center;gap:8px;flex-shrink:0}
+  .voteC .seg{display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border-radius:999px;
+    border:1px solid var(--line);background:#fff;cursor:pointer;font-weight:650;font-size:14px;
+    letter-spacing:-.02em;transition:.15s;color:var(--ink)}
+  .voteC .seg .caret{color:var(--icon)}
+  .voteC .seg:hover{border-color:#dcdcd8}
+  .voteC .seg.up.on{background:var(--accent-soft);border-color:#f3b79b;color:var(--accent)}
+  .voteC .seg.up.on .caret{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h2>Pill buttons</h2>
+  <div style="display:flex;gap:10px;align-items:center;margin:0 8px">
+    <button class="pillbtn primary">+ New idea</button>
+    <button class="pillbtn">Sign in</button>
+    <button class="pillbtn">All ideas</button>
+  </div>
+
+  <h2>Option A — horizontal capsule <span style="text-transform:none;font-weight:500;color:#b59">recommended</span></h2>
+  <p class="note">One pill: up-caret, score, down-caret. Grey icons, accent only when you've voted.</p>
+  <div class="idea" style="margin-top:12px">
+    <div class="voteA on"><span class="stack"><span class="caret up">▲</span><span class="caret down" style="visibility:hidden">▼</span></span>142<span class="stack"><span class="caret up" style="visibility:hidden">▲</span><span class="caret down">▼</span></span></div>
+    <div class="body"><div class="title">Dark mode</div><div class="desc">Eyes get tired in the evening.</div></div>
+  </div>
+  <div class="idea">
+    <div class="voteA"><span class="stack"><span class="caret up">▲</span></span>97<span class="stack"><span class="caret down">▼</span></span></div>
+    <div class="body"><div class="title">CSV export</div><div class="desc">Export ideas and votes for reports.</div></div>
+  </div>
+
+  <h2>Option B — vertical capsule</h2>
+  <p class="note">Solid rounded "колбаска": caret up, score, caret down. Compact, grey, accent on active.</p>
+  <div class="idea" style="margin-top:12px">
+    <div class="voteB"><button class="up on">▲</button><span class="num">142</span><button class="down">▼</button></div>
+    <div class="body"><div class="title">Dark mode</div><div class="desc">Eyes get tired in the evening.</div></div>
+  </div>
+  <div class="idea">
+    <div class="voteB"><button class="up">▲</button><span class="num">97</span><button class="down">▼</button></div>
+    <div class="body"><div class="title">CSV export</div><div class="desc">Export ideas and votes for reports.</div></div>
+  </div>
+
+  <h2>Option C — two pills</h2>
+  <p class="note">Explicit up / down as two pills. Clearest for first-timers.</p>
+  <div class="idea" style="margin-top:12px">
+    <div class="voteC">
+      <span class="seg up on"><span class="caret">▲</span>142</span>
+      <span class="seg down"><span class="caret">▼</span>8</span>
+    </div>
+    <div class="body"><div class="title">Dark mode</div></div>
+  </div>
+  <div class="idea">
+    <div class="voteC">
+      <span class="seg up"><span class="caret">▲</span>97</span>
+      <span class="seg down"><span class="caret">▼</span>3</span>
+    </div>
+    <div class="body"><div class="title">CSV export</div></div>
+  </div>
+
+</div>
+</body>
+</html>

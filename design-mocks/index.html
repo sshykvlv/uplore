@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uplore</title>
+<style>
+  :root{
+    --bg:#fbfbfa;--card:#fff;--line:#ececea;--ink:#1a1a18;--muted:#8a8a84;
+    --accent:#e8602c;--accent-soft:#fdeee7;--icon:#b4b4ae;--radius:14px;font-size:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",sans-serif;
+    background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.45}
+  a{color:inherit;text-decoration:none}
+
+  /* floating rounded header — slightly wider than the 720px content, à la norm.place */
+  header{position:sticky;top:0;z-index:10;padding:14px 16px 6px;
+    background:linear-gradient(var(--bg),var(--bg) 65%,rgba(251,251,250,0))}
+  .bar{max-width:716px;margin:0 auto;padding:7px 9px 7px 16px;display:flex;align-items:center;gap:10px;
+    background:rgba(255,255,255,.88);backdrop-filter:blur(12px);
+    border:1px solid var(--line);border-radius:16px;box-shadow:0 3px 12px rgba(0,0,0,.045)}
+  .logo{display:flex;align-items:center;gap:8px;font-weight:650;font-size:18px;letter-spacing:-.02em}
+  .logo .spark{width:22px;height:22px;border-radius:7px;
+    background:linear-gradient(150deg,#ff7a45,#e8602c);display:grid;place-items:center;
+    color:#fff;font-size:13px;box-shadow:0 2px 8px rgba(232,96,44,.35)}
+  .spacer{flex:1}
+  /* equal-height controls: button + avatar both 36px */
+  .pillbtn{height:36px;display:inline-flex;align-items:center;font-size:14px;font-weight:550;
+    padding:0 16px;border-radius:999px;border:1px solid var(--line);background:var(--card);cursor:pointer;transition:.15s}
+  .pillbtn:hover{border-color:#dcdcd8}
+  .pillbtn.primary{background:var(--accent);color:#fff;border-color:var(--accent);
+    box-shadow:0 2px 10px rgba(232,96,44,.3)}
+  .pillbtn.primary:hover{filter:brightness(1.04)}
+  .avatar{width:36px;height:36px;border-radius:50%;background:#d8d8d4;display:grid;
+    place-items:center;font-size:13px;font-weight:600;color:#666;flex-shrink:0}
+
+  main{max-width:720px;margin:0 auto;padding:10px 16px 60px}
+  .feed-head{display:flex;align-items:baseline;gap:10px;padding:6px 6px 14px}
+  .feed-head h1{font-size:14px;font-weight:600;color:var(--muted);
+    text-transform:uppercase;letter-spacing:.05em}
+
+  ul{list-style:none}
+  .idea{display:flex;gap:14px;align-items:flex-start;background:var(--card);border:1px solid var(--line);
+    border-radius:var(--radius);padding:16px 18px;margin-bottom:10px;transition:.15s}
+  .idea:hover{border-color:#ddddd9;box-shadow:0 1px 3px rgba(0,0,0,.03)}
+
+  /* vote capsule — per-arrow hover hit areas */
+  .cap{display:inline-flex;align-items:center;gap:3px;flex-shrink:0;margin-top:2px;
+    padding:3px 7px;border-radius:999px;border:1px solid var(--line);background:#fff;
+    font-weight:700;font-size:15px;letter-spacing:-.02em;user-select:none;transition:.15s}
+  .cap .num{min-width:18px;text-align:center}
+  .vbtn{display:grid;place-items:center;border:none;background:none;cursor:pointer;
+    padding:5px;border-radius:999px;color:var(--icon);transition:.12s;line-height:0}
+  .vbtn svg{display:block}
+  .vbtn.up:hover{color:var(--accent)}
+  .vbtn.dn:hover{color:#6b6b66}
+  /* voted states — up = ember; down = quiet grey (negative, stays neutral) */
+  .cap.up-on{background:var(--accent-soft);border-color:#f3b79b;color:var(--accent)}
+  .cap.up-on .vbtn.up{color:var(--accent)}
+  .cap.dn-on{background:#f1f1ef;border-color:#d8d8d2;color:#3a3a36}
+  .cap.dn-on .vbtn.dn{color:#5f5f5a}
+
+  .body{flex:1;min-width:0;padding-top:2px}
+  .text{font-size:15.5px;color:var(--ink);letter-spacing:-.005em}
+
+  /* right-side image row — tidy squares + "+N" tail, fixed footprint */
+  .imgrow{display:flex;gap:4px;flex-shrink:0;margin-top:1px}
+  .imgrow .tile{width:42px;height:42px;border-radius:7px;overflow:hidden;
+    display:grid;place-items:center;font-size:15px;cursor:pointer;transition:.13s}
+  .imgrow .tile:hover{transform:translateY(-1px)}
+  .imgrow .more{width:42px;height:42px;border-radius:7px;display:grid;place-items:center;
+    background:#efeeec;color:#6f6f69;font-size:12px;font-weight:700;cursor:pointer;transition:.13s}
+  .imgrow .more:hover{background:#e7e6e2}
+  .g1{background:linear-gradient(135deg,#fbe7dc,#f3c9ad)}
+  .g2{background:linear-gradient(135deg,#dfeef0,#bcd9dd)}
+  .g3{background:linear-gradient(135deg,#e7e6f3,#cbc9ec)}
+
+  .meta{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted);margin-top:11px}
+  .meta .who{font-weight:550;color:#6f6f69}
+  .dot{width:3px;height:3px;border-radius:50%;background:#cfcfca}
+  .cmt{display:flex;align-items:center;gap:5px}
+
+  .reacts{display:flex;align-items:center;gap:6px;margin-top:11px;flex-wrap:wrap}
+  .react{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;
+    border:1px solid var(--line);background:#fff;font-size:13px;font-weight:600;color:#6f6f69;
+    cursor:pointer;transition:.13s;line-height:1.4}
+  .react:hover{border-color:#dcdcd8}
+  .react.on{background:var(--accent-soft);border-color:#f3b79b;color:var(--accent)}
+  .react .em{font-size:14px}
+  /* add-reaction: solid (no dash), smiley face, labeled when card has no reactions yet */
+  .react-add{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;
+    border:1px solid var(--line);background:#fff;color:#8a8a84;cursor:pointer;font-size:13px;
+    font-weight:600;line-height:1.4;transition:.13s}
+  .react-add:hover{border-color:#f3b79b;color:var(--accent);background:var(--accent-soft)}
+  .react-add .face{font-size:14px;filter:grayscale(.15)}
+
+  footer{text-align:center;color:#bdbdb7;font-size:12.5px;padding:24px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <a class="logo" href="#"><span class="spark">✦</span>Uplore</a>
+    <div class="spacer"></div>
+    <button class="pillbtn primary">+ New idea</button>
+    <div class="avatar">SY</div>
+  </div>
+</header>
+
+<main>
+  <div class="feed-head"><h1>Ideas · by votes</h1></div>
+  <ul id="feed"></ul>
+  <footer>Uplore · open source</footer>
+</main>
+
+<script>
+const UP = '<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 11V2M6.5 2L3 5.5M6.5 2L10 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const DN = '<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 2V11M6.5 11L3 7.5M6.5 11L10 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+const ideas = [
+  { text:"Add a proper dark mode that auto-switches with the system theme — eyes get really tired in the evening.",
+    score:142, who:"@maria", when:"2 days ago", cmt:18, voted:true,
+    imgs:[["g1","🌙"],["g3","🎨"]], reacts:[["🔥",9,true],["🙌",5],["👀",3]] },
+  { text:"Let me export the idea list and all votes to CSV for monthly reports.",
+    score:97, who:"@anton", when:"5 days ago", cmt:6, imgs:[["g1","📊"]],
+    reacts:[["💯",4],["🚀",2]] },
+  { text:"A few reference screenshots from apps that nail this onboarding flow — color, layout, motion.",
+    score:63, who:"@kostya", when:"1 week ago", cmt:11, imgs:[["g2","📱"],["g3","🖼️"],["g1","✨"],["g2","🌅"],["g3","💡"]],
+    reacts:[["👍",7]] },
+  { text:"Add a search box — the list is getting long and I can't find ideas I've seen before.",
+    score:41, who:"@lena", when:"1 week ago", cmt:3, reacts:[] },
+  { text:"Support markdown in descriptions so I can use lists and links in longer ideas.",
+    score:12, who:"@igor", when:"3 days ago", cmt:2, imgs:[["g2","📝"],["g1","🔗"],["g3","✅"]], reacts:[] },
+];
+
+const feed = document.getElementById('feed');
+feed.innerHTML = ideas.map(i => {
+  const imgs = i.imgs || [];
+  let row = '';
+  if(imgs.length){
+    let cells;
+    if(imgs.length > 3){
+      cells = imgs.slice(0,2).map(s=>`<div class="tile ${s[0]}">${s[1]}</div>`).join('')
+            + `<div class="more">+${imgs.length-2}</div>`;
+    } else {
+      cells = imgs.map(s=>`<div class="tile ${s[0]}">${s[1]}</div>`).join('');
+    }
+    row = `<div class="imgrow">${cells}</div>`;
+  }
+  const chips = (i.reacts||[]).map(r=>`<span class="react ${r[2]?'on':''}"><span class="em">${r[0]}</span>${r[1]}</span>`).join('');
+  const addLabel = (i.reacts && i.reacts.length) ? '＋' : 'React';
+  const add = `<span class="react-add"><span class="face">🙂</span>${addLabel}</span>`;
+  return `
+  <li class="idea">
+    <div class="cap ${i.voted?'up-on':''}">
+      <button class="vbtn up">${UP}</button>
+      <span class="num">${i.score}</span>
+      <button class="vbtn dn">${DN}</button>
+    </div>
+    <div class="body">
+      <div class="text">${i.text}</div>
+      <div class="meta"><span class="who">${i.who}</span><span class="dot"></span><span>${i.when}</span><span class="dot"></span><span class="cmt">💬 ${i.cmt}</span></div>
+      <div class="reacts">${chips}${add}</div>
+    </div>
+    ${row}
+  </li>`;
+}).join('');
+</script>
+
+</body>
+</html>

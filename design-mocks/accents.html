@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kindling — accent options</title>
+<style>
+  :root{--bg:#fbfbfa;--card:#fff;--line:#ececea;--ink:#1a1a18;--muted:#8a8a84;--icon:#b4b4ae}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",sans-serif;
+    background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.45;padding:30px 18px 60px}
+  .wrap{max-width:580px;margin:0 auto}
+  h2{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:0 4px 20px}
+  .row{display:flex;align-items:center;gap:16px;margin-bottom:14px}
+  .lbl{width:150px;flex-shrink:0;font-size:14px;font-weight:600}
+  .lbl small{display:block;font-weight:400;color:var(--muted);font-size:12.5px}
+
+  .cap{display:inline-flex;align-items:center;gap:9px;padding:8px 14px;border-radius:999px;
+    border:1px solid var(--line);background:#fff;font-weight:700;font-size:15px;letter-spacing:-.02em}
+  .cap svg{display:block;color:var(--icon)}
+  .btn{font-size:14px;font-weight:550;padding:9px 16px;border-radius:999px;border:1px solid var(--line);color:#fff}
+  .react{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;
+    border:1px solid var(--line);background:#fff;font-size:13px;font-weight:600;line-height:1.4}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h2>Active-vote · button · reaction — accent options</h2>
+
+  <!-- A monochrome ink -->
+  <div class="row" style="--a:#1a1a18;--asoft:#f0f0ee;--abd:#d9d9d4;--atext:#1a1a18">
+    <div class="lbl">A · Monochrome<small>recommended</small></div>
+    <div class="cap" style="background:var(--ink);border-color:var(--ink);color:#fff">
+      <svg class="up" width="13" height="13" viewBox="0 0 13 13" fill="none" style="color:#fff"><path d="M6.5 11V2M6.5 2L3 5.5M6.5 2L10 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>142
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" style="color:#888"><path d="M6.5 2V11M6.5 11L3 7.5M6.5 11L10 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <span class="btn" style="background:var(--ink);border-color:var(--ink)">+ New idea</span>
+    <span class="react" style="background:var(--asoft);border-color:var(--abd);color:var(--atext)">🔥 9</span>
+  </div>
+
+  <!-- B soft grey -->
+  <div class="row">
+    <div class="lbl">B · Soft grey<small>subtlest, no color</small></div>
+    <div class="cap" style="background:#f1f1ef;border-color:#dcdcd6;color:#1a1a18">
+      <svg class="up" width="13" height="13" viewBox="0 0 13 13" fill="none" style="color:#5a5a55"><path d="M6.5 11V2M6.5 2L3 5.5M6.5 2L10 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>142
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 2V11M6.5 11L3 7.5M6.5 11L10 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <span class="btn" style="background:#2b2b28;border-color:#2b2b28">+ New idea</span>
+    <span class="react" style="background:#f1f1ef;border-color:#dcdcd6;color:#3a3a36">🔥 9</span>
+  </div>
+
+  <!-- C indigo -->
+  <div class="row">
+    <div class="lbl">C · Indigo<small>#4f46e5</small></div>
+    <div class="cap" style="background:#eef0fe;border-color:#bcbcf5;color:#4f46e5">
+      <svg class="up" width="13" height="13" viewBox="0 0 13 13" fill="none" style="color:#4f46e5"><path d="M6.5 11V2M6.5 2L3 5.5M6.5 2L10 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>142
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 2V11M6.5 11L3 7.5M6.5 11L10 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <span class="btn" style="background:#4f46e5;border-color:#4f46e5">+ New idea</span>
+    <span class="react" style="background:#eef0fe;border-color:#bcbcf5;color:#4f46e5">🔥 9</span>
+  </div>
+
+  <!-- D blue -->
+  <div class="row">
+    <div class="lbl">D · Blue<small>#2563eb</small></div>
+    <div class="cap" style="background:#e8f0fe;border-color:#a9c6f7;color:#2563eb">
+      <svg class="up" width="13" height="13" viewBox="0 0 13 13" fill="none" style="color:#2563eb"><path d="M6.5 11V2M6.5 2L3 5.5M6.5 2L10 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>142
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 2V11M6.5 11L3 7.5M6.5 11L10 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <span class="btn" style="background:#2563eb;border-color:#2563eb">+ New idea</span>
+    <span class="react" style="background:#e8f0fe;border-color:#a9c6f7;color:#2563eb">🔥 9</span>
+  </div>
+
+  <!-- E green -->
+  <div class="row">
+    <div class="lbl">E · Green<small>#16a34a</small></div>
+    <div class="cap" style="background:#e7f6ec;border-color:#a6dcb8;color:#16a34a">
+      <svg class="up" width="13" height="13" viewBox="0 0 13 13" fill="none" style="color:#16a34a"><path d="M6.5 11V2M6.5 2L3 5.5M6.5 2L10 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>142
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 2V11M6.5 11L3 7.5M6.5 11L10 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <span class="btn" style="background:#16a34a;border-color:#16a34a">+ New idea</span>
+    <span class="react" style="background:#e7f6ec;border-color:#a6dcb8;color:#16a34a">🔥 9</span>
+  </div>
+
+  <!-- F violet -->
+  <div class="row">
+    <div class="lbl">F · Violet<small>#7c3aed</small></div>
+    <div class="cap" style="background:#f3ecfe;border-color:#cbadf6;color:#7c3aed">
+      <svg class="up" width="13" height="13" viewBox="0 0 13 13" fill="none" style="color:#7c3aed"><path d="M6.5 11V2M6.5 2L3 5.5M6.5 2L10 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>142
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 2V11M6.5 11L3 7.5M6.5 11L10 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <span class="btn" style="background:#7c3aed;border-color:#7c3aed">+ New idea</span>
+    <span class="react" style="background:#f3ecfe;border-color:#cbadf6;color:#7c3aed">🔥 9</span>
+  </div>
+
+</div>
+</body>
+</html>

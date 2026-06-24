@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kindling — right-side image options</title>
+<style>
+  :root{--bg:#fbfbfa;--card:#fff;--line:#ececea;--ink:#1a1a18;--muted:#8a8a84;--icon:#b4b4ae;--radius:14px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",sans-serif;
+    background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.45;padding:26px 18px 60px}
+  main{max-width:640px;margin:0 auto}
+  h2{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:22px 4px 8px}
+  .h-note{font-size:12.5px;color:var(--muted);font-weight:400;text-transform:none;letter-spacing:0;margin-left:6px}
+
+  .idea{display:flex;gap:14px;align-items:flex-start;background:var(--card);border:1px solid var(--line);
+    border-radius:var(--radius);padding:16px 18px}
+  .cap{display:inline-flex;align-items:center;gap:3px;flex-shrink:0;margin-top:2px;padding:3px 7px;
+    border-radius:999px;border:1px solid var(--line);background:#fff;font-weight:700;font-size:15px;letter-spacing:-.02em}
+  .cap .num{min-width:18px;text-align:center}
+  .vbtn{display:grid;place-items:center;border:none;background:none;padding:5px;color:var(--icon);line-height:0}
+  .vbtn svg{display:block}
+  .body{flex:1;min-width:0;padding-top:2px}
+  .text{font-size:15.5px;color:var(--ink);letter-spacing:-.005em}
+  .meta{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted);margin-top:11px}
+  .meta .who{font-weight:550;color:#6f6f69}
+  .dot{width:3px;height:3px;border-radius:50%;background:#cfcfca}
+
+  .g1{background:linear-gradient(135deg,#fbe7dc,#f3c9ad)}
+  .g2{background:linear-gradient(135deg,#dfeef0,#bcd9dd)}
+  .g3{background:linear-gradient(135deg,#e7e6f3,#cbc9ec)}
+  .g4{background:linear-gradient(135deg,#eef0e0,#d4dab6)}
+  .tile{display:grid;place-items:center;overflow:hidden;font-size:16px}
+
+  /* A — single thumb + count badge */
+  .a{position:relative;width:60px;height:60px;border-radius:8px;flex-shrink:0;margin-top:1px;font-size:22px}
+  .a .cnt{position:absolute;right:4px;bottom:4px;padding:1px 6px;border-radius:6px;
+    background:rgba(20,20,18,.62);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;gap:3px}
+
+  /* B — flat straight stack (no border, soft shadow, low radius) */
+  .b{position:relative;width:70px;height:62px;flex-shrink:0;margin-top:1px}
+  .b .tile{position:absolute;width:50px;height:50px;border-radius:7px;box-shadow:0 1px 2px rgba(0,0,0,.10)}
+  .b .t3{left:14px;top:8px}
+  .b .t2{left:8px;top:5px}
+  .b .t1{left:2px;top:2px}
+
+  /* C — mini 2x2 grid */
+  .c{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:3px;
+    width:60px;height:60px;flex-shrink:0;margin-top:1px}
+  .c .tile{border-radius:5px;font-size:13px;width:100%;height:100%}
+  .c .more{background:#efeeec;color:#6f6f69;font-size:12px;font-weight:700}
+
+  /* D — tight row of squares */
+  .d{display:flex;gap:4px;flex-shrink:0;margin-top:1px}
+  .d .tile{width:42px;height:42px;border-radius:7px;font-size:15px}
+  .d .more{display:grid;place-items:center;width:42px;height:42px;border-radius:7px;
+    background:#efeeec;color:#6f6f69;font-size:12px;font-weight:700}
+
+  /* E — current fan, toned down (small radius, hairline, faint shadow) */
+  .e{position:relative;width:70px;height:62px;flex-shrink:0;margin-top:1px}
+  .e .tile{position:absolute;left:50%;top:50%;width:50px;height:50px;margin:-25px 0 0 -25px;
+    border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.08);font-size:18px}
+</style>
+</head>
+<body>
+<main>
+
+  <h2>A · single thumb + count <span class="h-note">most conservative — one image, "⧉ 5" badge</span></h2>
+  <div class="idea">
+    <div class="cap"><button class="vbtn up"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 11V2M6.5 2L3 5.5M6.5 2L10 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="num">63</span><button class="vbtn dn"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 2V11M6.5 11L3 7.5M6.5 11L10 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+    <div class="body"><div class="text">A few reference screenshots from apps that nail this onboarding flow.</div>
+      <div class="meta"><span class="who">@kostya</span><span class="dot"></span><span>1 week ago</span></div></div>
+    <div class="a tile g2">📱<span class="cnt">⧉ 5</span></div>
+  </div>
+
+  <h2>B · flat straight stack <span class="h-note">no border, low radius, faint shadow, no rotation</span></h2>
+  <div class="idea">
+    <div class="cap"><button class="vbtn up"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 11V2M6.5 2L3 5.5M6.5 2L10 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="num">63</span><button class="vbtn dn"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 2V11M6.5 11L3 7.5M6.5 11L10 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+    <div class="body"><div class="text">A few reference screenshots from apps that nail this onboarding flow.</div>
+      <div class="meta"><span class="who">@kostya</span><span class="dot"></span><span>1 week ago</span></div></div>
+    <div class="b"><div class="tile g3 t3">🖼️</div><div class="tile g1 t2">✨</div><div class="tile g2 t1">📱</div></div>
+  </div>
+
+  <h2>C · mini 2×2 grid <span class="h-note">contact-sheet, last cell "+N"</span></h2>
+  <div class="idea">
+    <div class="cap"><button class="vbtn up"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 11V2M6.5 2L3 5.5M6.5 2L10 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="num">63</span><button class="vbtn dn"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 2V11M6.5 11L3 7.5M6.5 11L10 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+    <div class="body"><div class="text">A few reference screenshots from apps that nail this onboarding flow.</div>
+      <div class="meta"><span class="who">@kostya</span><span class="dot"></span><span>1 week ago</span></div></div>
+    <div class="c"><div class="tile g2">📱</div><div class="tile g3">🖼️</div><div class="tile g1">✨</div><div class="tile more">+2</div></div>
+  </div>
+
+  <h2>D · tight row <span class="h-note">2–3 squares side by side, "+N" tail</span></h2>
+  <div class="idea">
+    <div class="cap"><button class="vbtn up"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 11V2M6.5 2L3 5.5M6.5 2L10 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="num">63</span><button class="vbtn dn"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 2V11M6.5 11L3 7.5M6.5 11L10 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+    <div class="body"><div class="text">A few reference screenshots from apps that nail this onboarding flow.</div>
+      <div class="meta"><span class="who">@kostya</span><span class="dot"></span><span>1 week ago</span></div></div>
+    <div class="d"><div class="tile g2">📱</div><div class="tile g3">🖼️</div><div class="more">+3</div></div>
+  </div>
+
+  <h2>E · fan, toned down <span class="h-note">current style but small radius, hairline shadow</span></h2>
+  <div class="idea">
+    <div class="cap"><button class="vbtn up"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 11V2M6.5 2L3 5.5M6.5 2L10 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="num">63</span><button class="vbtn dn"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 2V11M6.5 11L3 7.5M6.5 11L10 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+    <div class="body"><div class="text">A few reference screenshots from apps that nail this onboarding flow.</div>
+      <div class="meta"><span class="who">@kostya</span><span class="dot"></span><span>1 week ago</span></div></div>
+    <div class="e"><div class="tile g3" style="transform:rotate(-7deg) translate(-1px,4px)">🖼️</div><div class="tile g1" style="transform:rotate(5deg) translate(6px,2px)">✨</div><div class="tile g2" style="transform:rotate(-2deg) translate(-3px,-1px)">📱</div></div>
+  </div>
+
+</main>
+</body>
+</html>

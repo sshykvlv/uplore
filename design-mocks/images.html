@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kindling — image previews</title>
+<style>
+  :root{--bg:#fbfbfa;--card:#fff;--line:#ececea;--ink:#1a1a18;--muted:#8a8a84;
+    --accent:#e8602c;--accent-soft:#fdeee7;--icon:#b4b4ae;--radius:14px;font-size:16px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",sans-serif;
+    background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.45;padding:24px 16px 60px}
+  main{max-width:720px;margin:0 auto}
+  h2{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:18px 6px 8px}
+
+  .idea{display:flex;gap:14px;align-items:flex-start;background:var(--card);border:1px solid var(--line);
+    border-radius:var(--radius);padding:16px 18px;margin-bottom:10px}
+  .cap{display:inline-flex;align-items:center;gap:9px;flex-shrink:0;margin-top:3px;
+    padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:#fff;
+    font-weight:700;font-size:15px;letter-spacing:-.02em}
+  .cap svg{display:block;color:var(--icon)}
+  .body{flex:1;min-width:0;padding-top:1px}
+  .text{font-size:15.5px;color:var(--ink);letter-spacing:-.005em}
+
+  /* image preview strip */
+  .shots{display:flex;gap:7px;margin-top:11px}
+  .shot{width:84px;height:64px;border-radius:10px;flex-shrink:0;overflow:hidden;
+    position:relative;cursor:pointer;border:1px solid rgba(0,0,0,.05);
+    display:grid;place-items:center;font-size:22px;transition:.13s}
+  .shot:hover{transform:translateY(-1px);box-shadow:0 3px 10px rgba(0,0,0,.08)}
+  .g1{background:linear-gradient(135deg,#fbe7dc,#f3c9ad)}
+  .g2{background:linear-gradient(135deg,#dfeef0,#bcd9dd)}
+  .g3{background:linear-gradient(135deg,#e7e6f3,#cbc9ec)}
+  .g4{background:linear-gradient(135deg,#eef0e0,#d4dab6)}
+  .g5{background:linear-gradient(135deg,#f0e3ef,#dcc0da)}
+  .more{position:absolute;inset:0;background:rgba(20,20,18,.55);color:#fff;
+    display:grid;place-items:center;font-size:16px;font-weight:700;letter-spacing:-.02em}
+
+  .meta{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted);margin-top:11px}
+  .meta .who{font-weight:550;color:#6f6f69}
+  .dot{width:3px;height:3px;border-radius:50%;background:#cfcfca}
+  .cmt{display:flex;align-items:center;gap:5px}
+</style>
+</head>
+<body>
+<main>
+
+  <h2>1 image</h2>
+  <div class="idea">
+    <div class="cap"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 11V2M6.5 2L3 5.5M6.5 2L10 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>97<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 2V11M6.5 11L3 7.5M6.5 11L10 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="body">
+      <div class="text">Here's a mockup of the dashboard layout I'd love to see.</div>
+      <div class="shots">
+        <div class="shot g1">📊</div>
+      </div>
+      <div class="meta"><span class="who">@anton</span><span class="dot"></span><span>5 days ago</span><span class="dot"></span><span class="cmt">💬 6</span></div>
+    </div>
+  </div>
+
+  <h2>2 images</h2>
+  <div class="idea">
+    <div class="cap"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 11V2M6.5 2L3 5.5M6.5 2L10 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>54<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 2V11M6.5 11L3 7.5M6.5 11L10 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="body">
+      <div class="text">Before / after of the onboarding screen — second one feels much cleaner.</div>
+      <div class="shots">
+        <div class="shot g2">🖼️</div>
+        <div class="shot g3">✨</div>
+      </div>
+      <div class="meta"><span class="who">@maria</span><span class="dot"></span><span>2 days ago</span><span class="dot"></span><span class="cmt">💬 4</span></div>
+    </div>
+  </div>
+
+  <h2>3 images</h2>
+  <div class="idea">
+    <div class="cap"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 11V2M6.5 2L3 5.5M6.5 2L10 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>38<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 2V11M6.5 11L3 7.5M6.5 11L10 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="body">
+      <div class="text">A few reference screenshots from apps that nail this flow.</div>
+      <div class="shots">
+        <div class="shot g1">📱</div>
+        <div class="shot g4">🎨</div>
+        <div class="shot g5">💡</div>
+      </div>
+      <div class="meta"><span class="who">@lena</span><span class="dot"></span><span>1 week ago</span><span class="dot"></span><span class="cmt">💬 9</span></div>
+    </div>
+  </div>
+
+  <h2>5 images → "+2" overflow</h2>
+  <div class="idea">
+    <div class="cap"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 11V2M6.5 2L3 5.5M6.5 2L10 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>21<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 2V11M6.5 11L3 7.5M6.5 11L10 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="body">
+      <div class="text">Whole gallery of inspiration — color, layout, motion, the works.</div>
+      <div class="shots">
+        <div class="shot g2">🌅</div>
+        <div class="shot g3">🏙️</div>
+        <div class="shot g4">🌿</div>
+        <div class="shot g5">🌌<div class="more">+2</div></div>
+      </div>
+      <div class="meta"><span class="who">@igor</span><span class="dot"></span><span>3 days ago</span><span class="dot"></span><span class="cmt">💬 12</span></div>
+    </div>
+  </div>
+
+</main>
+</body>
+</html>
