@@ -15,7 +15,16 @@ export async function GET(req: NextRequest) {
     const identity = await telegramProvider.verify(params)
     const userId = upsertUser('telegram', identity)
     await createSession(userId)
-    return NextResponse.redirect(new URL('/', req.url))
+
+    // When deployed behind a reverse proxy, req.url may arrive as http://
+    // even though the public site is https. Use PUBLIC_URL origin if set so
+    // the redirect always goes to the correct scheme and host.
+    const publicUrl = process.env.PUBLIC_URL?.trim()
+    const redirectTarget = publicUrl
+      ? new URL('/', publicUrl)
+      : new URL('/', req.url)
+
+    return NextResponse.redirect(redirectTarget)
   } catch (err) {
     console.error('[auth/telegram]', err)
     return NextResponse.json({ error: 'Authentication failed' }, { status: 401 })

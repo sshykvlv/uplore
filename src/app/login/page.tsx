@@ -11,15 +11,46 @@ export const metadata = {
  * /login page.
  *
  * Shows:
+ *   - Telegram Login Widget (when NEXT_PUBLIC_TELEGRAM_BOT_USERNAME is set)
  *   - Dev login form (when ALLOW_DEV_LOGIN=true) — for local demos
- *   - Placeholder for Telegram Login Widget (wired up in Phase B when TELEGRAM_BOT_TOKEN is set)
+ *
+ * The widget is rendered as a server component that emits the official
+ * <script data-telegram-login=...> tag via dangerouslySetInnerHTML so it
+ * works with runtime env vars (no rebuild required on changes to bot username
+ * or PUBLIC_URL, since App Router server components read process.env at
+ * request time, not at build time).
  */
 export default async function LoginPage() {
   const user = await getSession()
   if (user) redirect('/')
 
   const devLoginEnabled = process.env.ALLOW_DEV_LOGIN === 'true' && process.env.NODE_ENV !== 'production'
-  const telegramBotToken = process.env.TELEGRAM_BOT_TOKEN
+
+  // Both vars are read server-side at runtime — no NEXT_PUBLIC build-time
+  // embedding issue for the server component path.
+  const botUsername = process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME?.trim()
+  const publicUrl = process.env.PUBLIC_URL?.trim()
+
+  // Build the auth-url for the widget: use PUBLIC_URL origin if set,
+  // otherwise fall back to a root-relative path (works when served from origin).
+  const authUrl = publicUrl
+    ? `${publicUrl.replace(/\/$/, '')}/api/auth/telegram`
+    : '/api/auth/telegram'
+
+  // Raw script tag injected server-side so the Telegram CDN script loads as
+  // a real DOM element where the widget iframe button renders.
+  const widgetHtml = botUsername
+    ? `<script
+        async
+        src="https://telegram.org/js/telegram-widget.js?22"
+        data-telegram-login="${botUsername}"
+        data-size="large"
+        data-auth-url="${authUrl}"
+        data-request-access="write"
+      ></script>`
+    : null
+
+  const hasTelegramWidget = Boolean(widgetHtml)
 
   return (
     <>
@@ -51,33 +82,35 @@ export default async function LoginPage() {
             Sign in to Uplore
           </h1>
 
-          {/* Telegram Widget placeholder — Phase B wires this up */}
-          {telegramBotToken ? (
-            <div style={{ marginBottom: 20, textAlign: 'center' }}>
-              {/* Phase B: inject Telegram Login Widget script here */}
-              <p style={{ color: 'var(--muted)', fontSize: 14 }}>
-                Telegram Login Widget (Phase B)
-              </p>
-            </div>
-          ) : (
+          {hasTelegramWidget ? (
+            /* Official Telegram Login Widget — server-rendered <script> tag.
+               Telegram's JS replaces the script element with an iframe button. */
             <div
-              style={{
-                padding: '12px 16px',
-                borderRadius: 10,
-                background: 'var(--accent-soft)',
-                border: '1px solid #f3b79b',
-                fontSize: 13,
-                color: '#9a3410',
-                marginBottom: devLoginEnabled ? 20 : 0,
-              }}
-            >
-              Set <code>TELEGRAM_BOT_TOKEN</code> to enable Telegram login.
-            </div>
+              style={{ marginBottom: 20, textAlign: 'center' }}
+              dangerouslySetInnerHTML={{ __html: widgetHtml! }}
+            />
+          ) : (
+            /* Neither bot username nor dev login: show a setup hint */
+            !devLoginEnabled && (
+              <div
+                style={{
+                  padding: '12px 16px',
+                  borderRadius: 10,
+                  background: 'var(--accent-soft)',
+                  border: '1px solid #f3b79b',
+                  fontSize: 13,
+                  color: '#9a3410',
+                  marginBottom: 0,
+                }}
+              >
+                Set <code>NEXT_PUBLIC_TELEGRAM_BOT_USERNAME</code> to enable Telegram login.
+              </div>
+            )
           )}
 
           {devLoginEnabled && (
             <>
-              {telegramBotToken && (
+              {hasTelegramWidget && (
                 <div
                   style={{
                     display: 'flex',

@@ -34,9 +34,25 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData()
     bodyText = (formData.get('body') as string | null)?.trim() ?? ''
 
+    const MAX_IMAGE_BYTES = 5 * 1024 * 1024 // 5 MB per image
+    const MAX_IMAGES = 6
+
     const files = formData.getAll('images') as File[]
+    if (files.filter((f) => f.size > 0).length > MAX_IMAGES) {
+      return NextResponse.json(
+        { error: `Too many images — maximum ${MAX_IMAGES} per idea` },
+        { status: 400 },
+      )
+    }
+
     for (const file of files) {
       if (file.size === 0) continue
+      if (file.size > MAX_IMAGE_BYTES) {
+        return NextResponse.json(
+          { error: `Image "${file.name}" exceeds the 5 MB size limit` },
+          { status: 400 },
+        )
+      }
       const ext = file.name.split('.').pop()?.toLowerCase() ?? 'jpg'
       const allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'avif']
       if (!allowed.includes(ext)) continue
