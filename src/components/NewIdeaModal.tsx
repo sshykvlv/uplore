@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { useRouter } from 'next/navigation'
 import { analytics } from '@/lib/umami'
 import type { ClientDict } from '@/lib/i18n/dictionaries'
@@ -101,8 +102,12 @@ export default function NewIdeaModal({ authed, t }: NewIdeaModalProps) {
         {t.newIdea}
       </button>
 
-      {/* Modal backdrop */}
-      {open && (
+      {/* Modal backdrop — rendered via a portal to <body> so it escapes the
+          header's backdrop-filter ancestor (which would otherwise become the
+          containing block for this position:fixed overlay and trap it inside
+          the header instead of covering the viewport). */}
+      {open &&
+        createPortal(
         <div
           onClick={closeModal}
           style={{
@@ -280,7 +285,8 @@ export default function NewIdeaModal({ authed, t }: NewIdeaModalProps) {
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </>
   )
