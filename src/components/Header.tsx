@@ -54,19 +54,7 @@ export default async function Header({ user, t, ct }: HeaderProps) {
             fontSize: 20,
           }}
         >
-          Uplore
-          {/* Instance label — same wordmark font (Cabinet Grotesk), muted + smaller */}
-          <span
-            style={{
-              marginLeft: 9,
-              fontSize: 13,
-              fontWeight: 700,
-              color: 'var(--muted)',
-              letterSpacing: '0.01em',
-            }}
-          >
-            Norm Ideas
-          </span>
+          Norm Ideas
         </Link>
 
         <div style={{ flex: 1 }} />
