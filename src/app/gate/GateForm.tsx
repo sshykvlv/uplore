@@ -2,14 +2,15 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import type { ClientDict } from '@/lib/i18n/dictionaries'
 
 interface GateFormProps {
-  /** Pre-filled code from ?code= searchParam (shareable link). Auto-submits on mount. */
   initialCode?: string
   next: string
+  t: ClientDict
 }
 
-export default function GateForm({ initialCode, next }: GateFormProps) {
+export default function GateForm({ initialCode, next, t }: GateFormProps) {
   const [code, setCode] = useState(initialCode ?? '')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -30,15 +31,14 @@ export default function GateForm({ initialCode, next }: GateFormProps) {
         return
       }
       const json = await res.json().catch(() => ({}))
-      setError((json as { error?: string }).error ?? 'Incorrect code')
+      setError((json as { error?: string }).error ?? t.incorrectCode)
     } catch {
-      setError('Network error — please try again')
+      setError(t.networkErrorGate)
     } finally {
       setLoading(false)
     }
   }
 
-  // Auto-submit when a code is provided via the shareable link (?code=...).
   useEffect(() => {
     if (initialCode && !didAutoSubmit.current) {
       didAutoSubmit.current = true
@@ -59,7 +59,7 @@ export default function GateForm({ initialCode, next }: GateFormProps) {
       <div style={{ display: 'flex', gap: 8 }}>
         <input
           type="password"
-          placeholder="Team password"
+          placeholder={t.teamPassword}
           value={code}
           onChange={(e) => setCode(e.target.value)}
           disabled={loading}
@@ -95,33 +95,19 @@ export default function GateForm({ initialCode, next }: GateFormProps) {
             whiteSpace: 'nowrap',
           }}
         >
-          {loading ? '…' : 'Enter'}
+          {loading ? '…' : t.enter}
         </button>
       </div>
 
       {error && (
-        <p
-          style={{
-            marginTop: 10,
-            fontSize: 13,
-            color: '#c0392b',
-            textAlign: 'center',
-          }}
-        >
+        <p style={{ marginTop: 10, fontSize: 13, color: '#c0392b', textAlign: 'center' }}>
           {error}
         </p>
       )}
 
       {initialCode && !error && loading && (
-        <p
-          style={{
-            marginTop: 10,
-            fontSize: 13,
-            color: 'var(--muted)',
-            textAlign: 'center',
-          }}
-        >
-          Verifying link…
+        <p style={{ marginTop: 10, fontSize: 13, color: 'var(--muted)', textAlign: 'center' }}>
+          {t.verifyingLink}
         </p>
       )}
     </form>

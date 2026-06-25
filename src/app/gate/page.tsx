@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import GateForm from './GateForm'
+import LanguageSwitcher from '@/components/LanguageSwitcher'
+import { getDict, getClientDict, getLocale, LOCALES } from '@/lib/i18n/locale'
 
 export const metadata: Metadata = {
   title: 'Team access · Uplore',
@@ -9,24 +11,19 @@ interface Props {
   searchParams: Promise<{ code?: string; next?: string }>
 }
 
-/**
- * /gate — team access gate page.
- *
- * Renders a password card matching the app's visual language.
- * When ?code= is present the embedded client component (GateForm)
- * auto-submits it on mount — this is the shareable-link flow.
- * On success /api/gate sets the uplore_gate cookie and GateForm
- * redirects to ?next (default /).
- */
 export default async function GatePage({ searchParams }: Props) {
   const { code, next } = await searchParams
   const redirectTo = next ?? '/'
+  const t = await getDict()
+  const ct = await getClientDict()
+  const locale = await getLocale()
 
   return (
     <main
       style={{
         minHeight: '100vh',
         display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
         padding: '0 16px',
@@ -45,7 +42,7 @@ export default async function GatePage({ searchParams }: Props) {
           textAlign: 'center',
         }}
       >
-        {/* Brand mark — same as the login screen */}
+        {/* Brand mark */}
         <div
           style={{
             display: 'inline-flex',
@@ -85,7 +82,7 @@ export default async function GatePage({ searchParams }: Props) {
             color: 'var(--ink)',
           }}
         >
-          Team access
+          {t.teamAccess}
         </h1>
 
         <p
@@ -96,10 +93,15 @@ export default async function GatePage({ searchParams }: Props) {
             lineHeight: 1.5,
           }}
         >
-          This board is private. Enter the team password to continue.
+          {t.boardIsPrivate}
         </p>
 
-        <GateForm initialCode={code} next={redirectTo} />
+        <GateForm initialCode={code} next={redirectTo} t={ct} />
+      </div>
+
+      {/* Language switcher below card */}
+      <div style={{ marginTop: 20 }}>
+        <LanguageSwitcher current={locale} locales={LOCALES} compact />
       </div>
     </main>
   )

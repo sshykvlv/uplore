@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { analytics } from '@/lib/umami'
+import type { ClientDict } from '@/lib/i18n/dictionaries'
 
 const EMOJI_PICKER_SET = ['🔥', '🙌', '👀', '💯', '🚀', '👍', '❤️', '😄']
 
@@ -15,14 +16,14 @@ interface ReactionChipsProps {
   ideaId: number
   initialReactions: Reaction[]
   authed: boolean
+  t: ClientDict
 }
 
-export default function ReactionChips({ ideaId, initialReactions, authed }: ReactionChipsProps) {
+export default function ReactionChips({ ideaId, initialReactions, authed, t }: ReactionChipsProps) {
   const [reactions, setReactions] = useState<Reaction[]>(initialReactions)
   const [pickerOpen, setPickerOpen] = useState(false)
   const pickerRef = useRef<HTMLDivElement>(null)
 
-  // Close picker when clicking outside
   useEffect(() => {
     if (!pickerOpen) return
     function handleClickOutside(e: MouseEvent) {
@@ -40,19 +41,15 @@ export default function ReactionChips({ ideaId, initialReactions, authed }: Reac
       return
     }
 
-    // Optimistic update
     const prevReactions = reactions
     setReactions((prev) => {
       const existing = prev.find((r) => r.emoji === emoji)
       if (existing) {
-        const newCount = existing.count - (existing.reacted ? 1 : 0) + (existing.reacted ? 0 : 1)
-        if (newCount === 0 && !existing.reacted) {
-          // Shouldn't happen but guard
-          return prev.filter((r) => r.emoji !== emoji)
-        }
         return prev
           .map((r) =>
-            r.emoji === emoji ? { ...r, reacted: !r.reacted, count: r.reacted ? r.count - 1 : r.count + 1 } : r,
+            r.emoji === emoji
+              ? { ...r, reacted: !r.reacted, count: r.reacted ? r.count - 1 : r.count + 1 }
+              : r,
           )
           .filter((r) => r.count > 0)
       } else {
@@ -80,7 +77,7 @@ export default function ReactionChips({ ideaId, initialReactions, authed }: Reac
   }
 
   const hasReactions = reactions.length > 0
-  const addLabel = hasReactions ? '＋' : 'React'
+  const addLabel = hasReactions ? '＋' : t.react
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 11, flexWrap: 'wrap', position: 'relative' }}>

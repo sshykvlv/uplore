@@ -4,10 +4,15 @@ import ReactionChips from '@/components/ReactionChips'
 import ImageRow from '@/components/ImageRow'
 import { relativeTime } from '@/lib/time'
 import type { IdeaRow } from '@/lib/queries'
+import type { Dict, ClientDict } from '@/lib/i18n/dictionaries'
 
 interface IdeaCardProps {
   idea: IdeaRow
   authed: boolean
+  /** Full dict for server-rendered strings (relativeTime) */
+  t: Dict
+  /** Serializable client dict for client sub-components */
+  ct: ClientDict
 }
 
 function authorLabel(idea: IdeaRow): string {
@@ -16,7 +21,7 @@ function authorLabel(idea: IdeaRow): string {
   return name.startsWith('@') ? name : `@${name}`
 }
 
-export default function IdeaCard({ idea, authed }: IdeaCardProps) {
+export default function IdeaCard({ idea, authed, t, ct }: IdeaCardProps) {
   return (
     <li
       style={{
@@ -31,7 +36,6 @@ export default function IdeaCard({ idea, authed }: IdeaCardProps) {
         transition: '.15s',
       }}
     >
-      {/* Vote capsule — client component */}
       <VoteCapsule
         ideaId={idea.id}
         initialScore={idea.score}
@@ -39,7 +43,6 @@ export default function IdeaCard({ idea, authed }: IdeaCardProps) {
         authed={authed}
       />
 
-      {/* Body */}
       <div style={{ flex: 1, minWidth: 0, paddingTop: 2 }}>
         <Link href={`/idea/${idea.id}`} style={{ display: 'block' }}>
           <p
@@ -54,7 +57,6 @@ export default function IdeaCard({ idea, authed }: IdeaCardProps) {
           </p>
         </Link>
 
-        {/* Meta row */}
         <div
           style={{
             display: 'flex',
@@ -67,30 +69,22 @@ export default function IdeaCard({ idea, authed }: IdeaCardProps) {
           }}
         >
           <span style={{ fontWeight: 550, color: '#6f6f69' }}>{authorLabel(idea)}</span>
-          <span
-            style={{ width: 3, height: 3, borderRadius: '50%', background: '#cfcfca', flexShrink: 0 }}
-          />
-          <span>{relativeTime(idea.created_at)}</span>
-          <span
-            style={{ width: 3, height: 3, borderRadius: '50%', background: '#cfcfca', flexShrink: 0 }}
-          />
-          <Link
-            href={`/idea/${idea.id}`}
-            style={{ display: 'flex', alignItems: 'center', gap: 5 }}
-          >
+          <span style={{ width: 3, height: 3, borderRadius: '50%', background: '#cfcfca', flexShrink: 0 }} />
+          <span>{relativeTime(idea.created_at, t.time)}</span>
+          <span style={{ width: 3, height: 3, borderRadius: '50%', background: '#cfcfca', flexShrink: 0 }} />
+          <Link href={`/idea/${idea.id}`} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
             💬 {idea.comment_count}
           </Link>
         </div>
 
-        {/* Reaction chips — client component */}
         <ReactionChips
           ideaId={idea.id}
           initialReactions={idea.reactions}
           authed={authed}
+          t={ct}
         />
       </div>
 
-      {/* Right-side image row */}
       {idea.images.length > 0 && <ImageRow images={idea.images} />}
     </li>
   )

@@ -2,19 +2,19 @@ import { getSession } from '@/lib/auth/session'
 import { getFeedIdeas } from '@/lib/queries'
 import Header from '@/components/Header'
 import IdeaCard from '@/components/IdeaCard'
+import { getDict, getClientDict } from '@/lib/i18n/locale'
 
 export const dynamic = 'force-dynamic'
 
-/**
- * Home page — live feed of ideas sorted by score DESC.
- */
 export default async function HomePage() {
   const user = await getSession()
   const ideas = getFeedIdeas(user?.id ?? null)
+  const t = await getDict()
+  const ct = await getClientDict()
 
   return (
     <>
-      <Header user={user} />
+      <Header user={user} t={t} ct={ct} />
       <main
         style={{
           maxWidth: 720,
@@ -39,7 +39,7 @@ export default async function HomePage() {
               letterSpacing: '.05em',
             }}
           >
-            Ideas · by votes
+            {t.feedHeading}
           </h1>
         </div>
 
@@ -51,13 +51,13 @@ export default async function HomePage() {
               color: 'var(--muted)',
             }}
           >
-            <p style={{ fontSize: 16, marginBottom: 8 }}>No ideas yet.</p>
-            <p style={{ fontSize: 14 }}>Be the first to post one!</p>
+            <p style={{ fontSize: 16, marginBottom: 8 }}>{t.noIdeasYet}</p>
+            <p style={{ fontSize: 14 }}>{t.beFirstToPost}</p>
           </div>
         ) : (
           <ul style={{ listStyle: 'none' }}>
             {ideas.map((idea) => (
-              <IdeaCard key={idea.id} idea={idea} authed={!!user} />
+              <IdeaCard key={idea.id} idea={idea} authed={!!user} t={t} ct={ct} />
             ))}
           </ul>
         )}
@@ -71,7 +71,7 @@ export default async function HomePage() {
           padding: 24,
         }}
       >
-        Uplore · open source
+        {t.footer}
       </footer>
     </>
   )

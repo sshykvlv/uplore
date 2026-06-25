@@ -3,13 +3,15 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { analytics } from '@/lib/umami'
+import type { ClientDict } from '@/lib/i18n/dictionaries'
 
 interface AddCommentFormProps {
   ideaId: number
   authed: boolean
+  t: ClientDict
 }
 
-export default function AddCommentForm({ ideaId, authed }: AddCommentFormProps) {
+export default function AddCommentForm({ ideaId, authed, t }: AddCommentFormProps) {
   const [body, setBody] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
@@ -19,9 +21,9 @@ export default function AddCommentForm({ ideaId, authed }: AddCommentFormProps) 
     return (
       <p style={{ fontSize: 14, color: 'var(--muted)', padding: '12px 0' }}>
         <a href="/login" style={{ color: 'var(--accent)' }}>
-          Sign in
+          {t.signInToComment}
         </a>{' '}
-        to leave a comment.
+        {t.toLeaveComment}
       </p>
     )
   }
@@ -41,14 +43,14 @@ export default function AddCommentForm({ ideaId, authed }: AddCommentFormProps) 
       })
       if (!res.ok) {
         const data = await res.json()
-        setError(data.error ?? 'Failed to post comment.')
+        setError(data.error ?? t.failedToPostComment)
       } else {
         analytics.commentPosted()
         setBody('')
         router.refresh()
       }
     } catch {
-      setError('Network error. Please try again.')
+      setError(t.networkError)
     } finally {
       setSubmitting(false)
     }
@@ -59,7 +61,7 @@ export default function AddCommentForm({ ideaId, authed }: AddCommentFormProps) 
       <textarea
         value={body}
         onChange={(e) => setBody(e.target.value)}
-        placeholder="Add a comment…"
+        placeholder={t.commentPlaceholder}
         maxLength={2000}
         rows={3}
         style={{
@@ -100,7 +102,7 @@ export default function AddCommentForm({ ideaId, authed }: AddCommentFormProps) 
             transition: '.15s',
           }}
         >
-          {submitting ? 'Posting…' : 'Post comment'}
+          {submitting ? t.postingComment : t.postComment}
         </button>
       </div>
     </form>

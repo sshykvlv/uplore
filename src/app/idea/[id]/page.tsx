@@ -8,6 +8,7 @@ import ReactionChips from '@/components/ReactionChips'
 import ImageGallery from '@/components/ImageGallery'
 import AddCommentForm from '@/components/AddCommentForm'
 import { relativeTime } from '@/lib/time'
+import { getDict, getClientDict } from '@/lib/i18n/locale'
 
 export const dynamic = 'force-dynamic'
 
@@ -30,10 +31,12 @@ export default async function IdeaDetailPage({ params }: PageProps) {
   if (!idea) notFound()
 
   const comments = getIdeaComments(id)
+  const t = await getDict()
+  const ct = await getClientDict()
 
   return (
     <>
-      <Header user={user} />
+      <Header user={user} t={t} ct={ct} />
       <main
         style={{
           maxWidth: 720,
@@ -41,7 +44,6 @@ export default async function IdeaDetailPage({ params }: PageProps) {
           padding: '10px 16px 60px',
         }}
       >
-        {/* Back link */}
         <Link
           href="/"
           style={{
@@ -54,10 +56,9 @@ export default async function IdeaDetailPage({ params }: PageProps) {
             padding: '4px 0',
           }}
         >
-          ← Back to feed
+          {t.backToFeed}
         </Link>
 
-        {/* Idea card — full detail */}
         <div
           style={{
             background: 'var(--card)',
@@ -102,13 +103,9 @@ export default async function IdeaDetailPage({ params }: PageProps) {
                 <span style={{ fontWeight: 550, color: '#6f6f69' }}>
                   {authorLabel(idea.username, idea.display_name)}
                 </span>
-                <span
-                  style={{ width: 3, height: 3, borderRadius: '50%', background: '#cfcfca', flexShrink: 0 }}
-                />
-                <span>{relativeTime(idea.created_at)}</span>
-                <span
-                  style={{ width: 3, height: 3, borderRadius: '50%', background: '#cfcfca', flexShrink: 0 }}
-                />
+                <span style={{ width: 3, height: 3, borderRadius: '50%', background: '#cfcfca', flexShrink: 0 }} />
+                <span>{relativeTime(idea.created_at, t.time)}</span>
+                <span style={{ width: 3, height: 3, borderRadius: '50%', background: '#cfcfca', flexShrink: 0 }} />
                 <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                   💬 {idea.comment_count}
                 </span>
@@ -118,15 +115,14 @@ export default async function IdeaDetailPage({ params }: PageProps) {
                 ideaId={idea.id}
                 initialReactions={idea.reactions}
                 authed={!!user}
+                t={ct}
               />
             </div>
           </div>
 
-          {/* Full image gallery */}
           <ImageGallery images={idea.images} />
         </div>
 
-        {/* Comments section */}
         <section>
           <h2
             style={{
@@ -138,12 +134,12 @@ export default async function IdeaDetailPage({ params }: PageProps) {
               marginBottom: 16,
             }}
           >
-            Comments · {comments.length}
+            {t.commentsHeading(comments.length)}
           </h2>
 
           {comments.length === 0 && (
             <p style={{ fontSize: 14, color: 'var(--muted)', marginBottom: 20 }}>
-              No comments yet. Be the first!
+              {t.noCommentsYet}
             </p>
           )}
 
@@ -166,7 +162,6 @@ export default async function IdeaDetailPage({ params }: PageProps) {
                     color: 'var(--muted)',
                   }}
                 >
-                  {/* Avatar / initials */}
                   <div
                     style={{
                       width: 28,
@@ -190,17 +185,15 @@ export default async function IdeaDetailPage({ params }: PageProps) {
                   <span style={{ fontWeight: 550, color: '#6f6f69' }}>
                     {authorLabel(c.username, c.display_name)}
                   </span>
-                  <span
-                    style={{ width: 3, height: 3, borderRadius: '50%', background: '#cfcfca', flexShrink: 0 }}
-                  />
-                  <span>{relativeTime(c.created_at)}</span>
+                  <span style={{ width: 3, height: 3, borderRadius: '50%', background: '#cfcfca', flexShrink: 0 }} />
+                  <span>{relativeTime(c.created_at, t.time)}</span>
                 </div>
                 <p style={{ fontSize: 14.5, color: 'var(--ink)', lineHeight: 1.5 }}>{c.body}</p>
               </li>
             ))}
           </ul>
 
-          <AddCommentForm ideaId={idea.id} authed={!!user} />
+          <AddCommentForm ideaId={idea.id} authed={!!user} t={ct} />
         </section>
       </main>
 
@@ -212,7 +205,7 @@ export default async function IdeaDetailPage({ params }: PageProps) {
           padding: 24,
         }}
       >
-        Uplore · open source
+        {t.footer}
       </footer>
     </>
   )

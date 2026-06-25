@@ -1,23 +1,19 @@
 import { redirect } from 'next/navigation'
 import { getSession } from '@/lib/auth/session'
 import DevLoginForm from './DevLoginForm'
+import LanguageSwitcher from '@/components/LanguageSwitcher'
+import { getDict, getLocale, LOCALES } from '@/lib/i18n/locale'
 
 export const metadata = {
   title: 'Sign in · Uplore',
 }
 
-/**
- * /login page — a focused, vertically-centered auth screen (no global header),
- * visually a sibling of /gate. Everything is centered so the layout stays neat
- * across all states: Telegram widget, dev login, or a setup hint.
- *
- * The Telegram widget is emitted server-side as the official
- * <script data-telegram-login=...> tag via dangerouslySetInnerHTML so it works
- * with runtime env vars (no rebuild needed when bot username / PUBLIC_URL change).
- */
 export default async function LoginPage() {
   const user = await getSession()
   if (user) redirect('/')
+
+  const t = await getDict()
+  const locale = await getLocale()
 
   const devLoginEnabled =
     process.env.ALLOW_DEV_LOGIN === 'true' && process.env.NODE_ENV !== 'production'
@@ -47,6 +43,7 @@ export default async function LoginPage() {
       style={{
         minHeight: '100vh',
         display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
         padding: '0 16px',
@@ -107,7 +104,7 @@ export default async function LoginPage() {
             color: 'var(--ink)',
           }}
         >
-          Sign in
+          {t.signInHeading}
         </h1>
         <p
           style={{
@@ -117,18 +114,12 @@ export default async function LoginPage() {
             marginBottom: 26,
           }}
         >
-          Sign in to post ideas, vote, and comment.
+          {t.signInSubheading}
         </p>
 
         {hasTelegramWidget && (
-          /* Telegram's JS replaces this <script> with the iframe button.
-             min-height reserves space so the card doesn't jump while it loads. */
           <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              minHeight: 48,
-            }}
+            style={{ display: 'flex', justifyContent: 'center', minHeight: 48 }}
             dangerouslySetInnerHTML={{ __html: widgetHtml! }}
           />
         )}
@@ -163,13 +154,18 @@ export default async function LoginPage() {
                 }}
               >
                 <hr style={{ flex: 1, border: 'none', borderTop: '1px solid var(--line)' }} />
-                or dev login
+                {t.orDevLogin}
                 <hr style={{ flex: 1, border: 'none', borderTop: '1px solid var(--line)' }} />
               </div>
             )}
             <DevLoginForm />
           </>
         )}
+      </div>
+
+      {/* Language switcher below card */}
+      <div style={{ marginTop: 20 }}>
+        <LanguageSwitcher current={locale} locales={LOCALES} compact />
       </div>
     </main>
   )

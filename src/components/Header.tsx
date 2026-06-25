@@ -1,9 +1,16 @@
 import Link from 'next/link'
 import type { SessionUser } from '@/lib/auth/session'
 import NewIdeaModal from '@/components/NewIdeaModal'
+import LanguageSwitcher from '@/components/LanguageSwitcher'
+import { getLocale, LOCALES } from '@/lib/i18n/locale'
+import type { Dict, ClientDict } from '@/lib/i18n/dictionaries'
 
 interface HeaderProps {
   user: SessionUser | null
+  /** Full server-side dict for server-rendered strings */
+  t: Dict
+  /** Serializable client dict passed through to client components */
+  ct: ClientDict
 }
 
 function initials(user: SessionUser): string {
@@ -16,11 +23,12 @@ function initials(user: SessionUser): string {
 }
 
 /**
- * Floating rounded header — matches design-mocks/index.html exactly.
+ * Floating rounded header.
  * Sticky, blurred white, subtle shadow.
- * "+ New idea" wired to NewIdeaModal (client component).
  */
-export default function Header({ user }: HeaderProps) {
+export default async function Header({ user, t, ct }: HeaderProps) {
+  const locale = await getLocale()
+
   return (
     <header
       style={{
@@ -79,8 +87,11 @@ export default function Header({ user }: HeaderProps) {
 
         <div style={{ flex: 1 }} />
 
-        {/* New idea modal trigger — always rendered but redirects to /login if not authed */}
-        <NewIdeaModal authed={!!user} />
+        {/* Language switcher */}
+        <LanguageSwitcher current={locale} locales={LOCALES} />
+
+        {/* New idea modal — passes serializable client dict */}
+        <NewIdeaModal authed={!!user} t={ct} />
 
         {user ? (
           <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -127,7 +138,7 @@ export default function Header({ user }: HeaderProps) {
                 color: 'var(--muted)',
               }}
             >
-              Sign out
+              {t.signOut}
             </Link>
           </div>
         ) : (
@@ -146,7 +157,7 @@ export default function Header({ user }: HeaderProps) {
               color: 'var(--ink)',
             }}
           >
-            Sign in
+            {t.signIn}
           </Link>
         )}
       </div>

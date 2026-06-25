@@ -3,12 +3,15 @@
 import { useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { analytics } from '@/lib/umami'
+import type { ClientDict } from '@/lib/i18n/dictionaries'
+import { formatN } from '@/lib/i18n/dictionaries'
 
 interface NewIdeaModalProps {
   authed: boolean
+  t: ClientDict
 }
 
-export default function NewIdeaModal({ authed }: NewIdeaModalProps) {
+export default function NewIdeaModal({ authed, t }: NewIdeaModalProps) {
   const [open, setOpen] = useState(false)
   const [body, setBody] = useState('')
   const [files, setFiles] = useState<File[]>([])
@@ -36,7 +39,7 @@ export default function NewIdeaModal({ authed }: NewIdeaModalProps) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!body.trim() || body.trim().length < 3) {
-      setError('Idea must be at least 3 characters.')
+      setError(t.ideaTooShort)
       return
     }
     setError('')
@@ -50,7 +53,7 @@ export default function NewIdeaModal({ authed }: NewIdeaModalProps) {
       const res = await fetch('/api/ideas', { method: 'POST', body: fd })
       if (!res.ok) {
         const data = await res.json()
-        setError(data.error ?? 'Failed to post idea.')
+        setError(data.error ?? t.failedToPost)
         setSubmitting(false)
         return
       }
@@ -60,12 +63,10 @@ export default function NewIdeaModal({ authed }: NewIdeaModalProps) {
       setBody('')
       setFiles([])
       router.refresh()
-      // Scroll to top to see the new idea
       window.scrollTo({ top: 0, behavior: 'smooth' })
-      // Navigate to the new idea detail
       router.push(`/idea/${data.id}`)
     } catch {
-      setError('Network error. Please try again.')
+      setError(t.networkError)
       setSubmitting(false)
     }
   }
@@ -74,9 +75,11 @@ export default function NewIdeaModal({ authed }: NewIdeaModalProps) {
     if (e.target.files) setFiles(Array.from(e.target.files))
   }
 
+  const filesLabel = files.length > 0 ? formatN(t.imagesSelectedTpl, files.length) : t.attachImages
+
   return (
     <>
-      {/* "+ New idea" button */}
+      {/* Trigger button */}
       <button
         onClick={openModal}
         style={{
@@ -95,7 +98,7 @@ export default function NewIdeaModal({ authed }: NewIdeaModalProps) {
           transition: '.15s',
         }}
       >
-        + New idea
+        {t.newIdea}
       </button>
 
       {/* Modal backdrop */}
@@ -135,14 +138,14 @@ export default function NewIdeaModal({ authed }: NewIdeaModalProps) {
                 color: 'var(--ink)',
               }}
             >
-              New idea
+              {t.newIdeaTitle}
             </h2>
 
             <form onSubmit={handleSubmit}>
               <textarea
                 value={body}
                 onChange={(e) => setBody(e.target.value)}
-                placeholder="Describe your idea in 1–2 sentences…"
+                placeholder={t.ideaPlaceholder}
                 maxLength={1000}
                 rows={4}
                 autoFocus
@@ -195,7 +198,7 @@ export default function NewIdeaModal({ authed }: NewIdeaModalProps) {
                   onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent)')}
                   onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--muted)')}
                 >
-                  📎 {files.length > 0 ? `${files.length} image${files.length > 1 ? 's' : ''} selected` : 'Attach images'}
+                  📎 {filesLabel}
                 </button>
                 <input
                   ref={fileInputRef}
@@ -208,14 +211,7 @@ export default function NewIdeaModal({ authed }: NewIdeaModalProps) {
               </div>
 
               {files.length > 0 && (
-                <div
-                  style={{
-                    display: 'flex',
-                    gap: 6,
-                    flexWrap: 'wrap',
-                    marginBottom: 16,
-                  }}
-                >
+                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 16 }}>
                   {files.map((f, i) => (
                     <span
                       key={i}
@@ -254,7 +250,7 @@ export default function NewIdeaModal({ authed }: NewIdeaModalProps) {
                     cursor: 'pointer',
                   }}
                 >
-                  Cancel
+                  {t.cancel}
                 </button>
                 <button
                   type="submit"
@@ -274,7 +270,7 @@ export default function NewIdeaModal({ authed }: NewIdeaModalProps) {
                     transition: '.15s',
                   }}
                 >
-                  {submitting ? 'Posting…' : 'Post idea'}
+                  {submitting ? t.posting : t.post}
                 </button>
               </div>
             </form>

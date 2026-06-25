@@ -166,6 +166,28 @@ Note: the gate is separate from Telegram login. The gate controls whether a visi
 
 ---
 
+## Languages
+
+The UI supports four languages:
+
+| Code | Language   |
+|------|------------|
+| `en` | English    |
+| `ru` | Русский    |
+| `uk` | Українська |
+| `pl` | Polski     |
+
+Locale is resolved in this order:
+1. `locale` cookie (set by the in-app language switcher, expires in 1 year)
+2. `Accept-Language` request header (best-match among the four codes)
+3. Fallback: `en`
+
+The switcher appears in the main header and also below the `/login` and `/gate` cards (so users can pick their language before authenticating). Only UI chrome is translated — idea bodies and comments are always displayed as authored.
+
+No new environment variables are needed.
+
+---
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
