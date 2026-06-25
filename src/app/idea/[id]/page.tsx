@@ -48,10 +48,15 @@ export default async function IdeaDetailPage({ params }: PageProps) {
             display: 'inline-flex',
             alignItems: 'center',
             gap: 6,
+            height: 32,
             fontSize: 13,
+            fontWeight: 500,
             color: 'var(--muted)',
             marginBottom: 20,
-            padding: '4px 0',
+            padding: '0 14px',
+            borderRadius: 9999,
+            border: '1px solid var(--line)',
+            background: 'var(--card)',
           }}
         >
           {t.backToFeed}

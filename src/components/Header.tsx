@@ -55,6 +55,18 @@ export default async function Header({ user, t, ct }: HeaderProps) {
           }}
         >
           Uplore
+          {/* Instance label — same wordmark font (Cabinet Grotesk), muted + smaller */}
+          <span
+            style={{
+              marginLeft: 9,
+              fontSize: 13,
+              fontWeight: 700,
+              color: 'var(--muted)',
+              letterSpacing: '0.01em',
+            }}
+          >
+            Norm Ideas
+          </span>
         </Link>
 
         <div style={{ flex: 1 }} />
@@ -64,12 +76,6 @@ export default async function Header({ user, t, ct }: HeaderProps) {
 
         {user ? (
           <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Avatar
-              avatarUrl={user.avatar_url}
-              name={user.display_name ?? user.username}
-              size={32}
-            />
-
             <form action="/api/auth/logout" method="POST" style={{ display: 'flex' }}>
               <button
                 type="submit"
@@ -90,6 +96,13 @@ export default async function Header({ user, t, ct }: HeaderProps) {
                 {t.signOut}
               </button>
             </form>
+
+            {/* Avatar pinned to the far-right edge of the header */}
+            <Avatar
+              avatarUrl={user.avatar_url}
+              name={user.display_name ?? user.username}
+              size={32}
+            />
           </div>
         ) : (
           <Link
