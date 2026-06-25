@@ -3,6 +3,7 @@ import VoteCapsule from '@/components/VoteCapsule'
 import ReactionChips from '@/components/ReactionChips'
 import ImageRow from '@/components/ImageRow'
 import { relativeTime } from '@/lib/time'
+import { authorLabel } from '@/lib/author'
 import type { IdeaRow } from '@/lib/queries'
 import type { Dict, ClientDict } from '@/lib/i18n/dictionaries'
 
@@ -13,12 +14,6 @@ interface IdeaCardProps {
   t: Dict
   /** Serializable client dict for client sub-components */
   ct: ClientDict
-}
-
-function authorLabel(idea: IdeaRow): string {
-  const name = idea.display_name ?? idea.username
-  if (!name) return '@unknown'
-  return name.startsWith('@') ? name : `@${name}`
 }
 
 export default function IdeaCard({ idea, authed, t, ct }: IdeaCardProps) {
@@ -68,7 +63,7 @@ export default function IdeaCard({ idea, authed, t, ct }: IdeaCardProps) {
             flexWrap: 'wrap',
           }}
         >
-          <span style={{ fontWeight: 550, color: '#6f6f69' }}>{authorLabel(idea)}</span>
+          <span style={{ fontWeight: 550, color: '#6f6f69' }}>{authorLabel(idea.username, idea.display_name)}</span>
           <span style={{ width: 3, height: 3, borderRadius: '50%', background: '#cfcfca', flexShrink: 0 }} />
           <span>{relativeTime(idea.created_at, t.time)}</span>
           <Link href={`/idea/${idea.id}`} className="comment-link">

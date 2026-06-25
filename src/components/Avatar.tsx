@@ -60,7 +60,10 @@ export default function Avatar({ avatarUrl, name, size = 32 }: AvatarProps) {
           alt={name ?? 'avatar'}
           width={size}
           height={size}
-          onLoad={() => setLoaded(true)}
+          onLoad={(e) => {
+            if (e.currentTarget.naturalWidth > 1) setLoaded(true)
+            else setFailed(true)
+          }}
           onError={() => setFailed(true)}
           style={{
             position: 'absolute',

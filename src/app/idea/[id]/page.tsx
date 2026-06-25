@@ -8,16 +8,12 @@ import ReactionChips from '@/components/ReactionChips'
 import ImageGallery from '@/components/ImageGallery'
 import AddCommentForm from '@/components/AddCommentForm'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
+import Avatar from '@/components/Avatar'
 import { relativeTime } from '@/lib/time'
+import { authorLabel } from '@/lib/author'
 import { getDict, getClientDict, getLocale, LOCALES } from '@/lib/i18n/locale'
 
 export const dynamic = 'force-dynamic'
-
-function authorLabel(username: string | null, displayName: string | null): string {
-  const name = displayName ?? username
-  if (!name) return '@unknown'
-  return name.startsWith('@') ? name : `@${name}`
-}
 
 interface PageProps {
   params: { id: string }
@@ -164,26 +160,7 @@ export default async function IdeaDetailPage({ params }: PageProps) {
                     color: 'var(--muted)',
                   }}
                 >
-                  <div
-                    style={{
-                      width: 28,
-                      height: 28,
-                      borderRadius: '50%',
-                      background: '#d8d8d4',
-                      display: 'grid',
-                      placeItems: 'center',
-                      fontSize: 11,
-                      fontWeight: 600,
-                      color: '#666',
-                      flexShrink: 0,
-                    }}
-                  >
-                    {(c.display_name ?? c.username ?? '?')
-                      .split(/\s+/)
-                      .slice(0, 2)
-                      .map((w: string) => w[0]?.toUpperCase() ?? '')
-                      .join('')}
-                  </div>
+                  <Avatar avatarUrl={c.avatar_url} name={c.display_name ?? c.username} size={28} />
                   <span style={{ fontWeight: 550, color: '#6f6f69' }}>
                     {authorLabel(c.username, c.display_name)}
                   </span>
