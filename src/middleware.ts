@@ -15,10 +15,15 @@ import { NextRequest, NextResponse } from 'next/server'
 const GATE_COOKIE = 'uplore_gate'
 
 // Paths that must never be bounced by the gate.
+// NOTE: /api/auth/* is exempt because the Telegram Login Widget redirects the
+// user back to /api/auth/telegram from telegram.org; if the gate intercepted
+// that callback the login could never complete. Auth endpoints only establish
+// identity — they never expose board content, which stays gated on every view.
 const EXEMPT_PREFIXES = [
   '/gate',
   '/api/gate',
   '/api/health',
+  '/api/auth/',
   '/_next/',
   '/favicon.ico',
 ]
