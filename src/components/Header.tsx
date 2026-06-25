@@ -46,13 +46,13 @@ export default async function Header({ user, t, ct }: HeaderProps) {
         {/* Wordmark */}
         <Link
           href="/"
+          className="wordmark"
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: 8,
-            fontWeight: 650,
+            fontWeight: 700,
             fontSize: 18,
-            letterSpacing: '-0.02em',
           }}
         >
           <span

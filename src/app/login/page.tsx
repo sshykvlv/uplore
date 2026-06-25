@@ -55,13 +55,13 @@ export default async function LoginPage() {
         {/* Brand mark */}
         <a
           href="/"
+          className="wordmark"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
             gap: 8,
-            fontWeight: 650,
+            fontWeight: 700,
             fontSize: 18,
-            letterSpacing: '-0.02em',
             color: 'var(--ink)',
             textDecoration: 'none',
             marginBottom: 22,
