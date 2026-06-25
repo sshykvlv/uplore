@@ -21,10 +21,10 @@ const cabinet = localFont({
 })
 
 export const metadata: Metadata = {
-  title: 'Uplore',
+  title: 'Norm Ideas',
   description: 'A Hacker-News-style idea board — self-hostable, open source.',
   openGraph: {
-    title: 'Uplore',
+    title: 'Norm Ideas',
     description: 'Community idea voting board',
     type: 'website',
   },

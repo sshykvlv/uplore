@@ -6,7 +6,7 @@ import TelegramLoginButton from '@/components/TelegramLoginButton'
 import { getDict, getLocale, LOCALES } from '@/lib/i18n/locale'
 
 export const metadata = {
-  title: 'Sign in · Uplore',
+  title: 'Sign in · Norm Ideas',
 }
 
 export default async function LoginPage() {
@@ -66,7 +66,7 @@ export default async function LoginPage() {
             marginBottom: 22,
           }}
         >
-          Uplore
+          Norm Ideas
         </a>
 
         <h1

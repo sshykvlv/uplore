@@ -4,7 +4,7 @@ import LanguageSwitcher from '@/components/LanguageSwitcher'
 import { getDict, getClientDict, getLocale, LOCALES } from '@/lib/i18n/locale'
 
 export const metadata: Metadata = {
-  title: 'Team access · Uplore',
+  title: 'Team access · Norm Ideas',
 }
 
 interface Props {
@@ -54,7 +54,7 @@ export default async function GatePage({ searchParams }: Props) {
             marginBottom: 22,
           }}
         >
-          Uplore
+          Norm Ideas
         </div>
 
         <h1
