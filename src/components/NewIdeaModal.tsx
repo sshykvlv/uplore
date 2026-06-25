@@ -111,10 +111,15 @@ export default function NewIdeaModal({ authed, t }: NewIdeaModalProps) {
             background: 'rgba(0,0,0,.35)',
             backdropFilter: 'blur(3px)',
             zIndex: 100,
+            // Top-anchored + scrollable so the mobile keyboard can't push the
+            // title/textarea off-screen (vertical centering broke with the
+            // on-screen keyboard).
             display: 'flex',
-            alignItems: 'center',
+            alignItems: 'flex-start',
             justifyContent: 'center',
             padding: '16px',
+            paddingTop: 'max(48px, env(safe-area-inset-top))',
+            overflowY: 'auto',
           }}
         >
           {/* Modal panel */}
@@ -123,7 +128,7 @@ export default function NewIdeaModal({ authed, t }: NewIdeaModalProps) {
             style={{
               background: '#fff',
               borderRadius: 20,
-              padding: '28px 28px 24px',
+              padding: '24px 24px 20px',
               width: '100%',
               maxWidth: 520,
               boxShadow: '0 20px 60px rgba(0,0,0,.18)',
