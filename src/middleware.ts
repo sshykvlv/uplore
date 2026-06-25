@@ -15,15 +15,14 @@ import { NextRequest, NextResponse } from 'next/server'
 const GATE_COOKIE = 'uplore_gate'
 
 // Paths that must never be bounced by the gate.
-// NOTE: /api/auth/* is exempt because the Telegram Login Widget redirects the
-// user back to /api/auth/telegram from telegram.org; if the gate intercepted
-// that callback the login could never complete. Auth endpoints only establish
-// identity — they never expose board content, which stays gated on every view.
+// The whole /api surface is exempt: redirecting an XHR/fetch to the /gate HTML
+// page makes the client choke on res.json() (the "vote spins then resets to 0"
+// bug) and breaks the Telegram callback. The team gate guards the CONTENT,
+// which is server-rendered on the pages (/, /idea/[id], /login) — those stay
+// gated. The action APIs (vote/react/comment/post) require a session anyway.
 const EXEMPT_PREFIXES = [
   '/gate',
-  '/api/gate',
-  '/api/health',
-  '/api/auth/',
+  '/api/',
   '/_next/',
   '/favicon.ico',
 ]
