@@ -93,20 +93,20 @@ export default async function Header({ user, t, ct }: HeaderProps) {
               <img
                 src={user.avatar_url}
                 alt={user.display_name ?? user.username ?? 'avatar'}
-                width={36}
-                height={36}
+                width={32}
+                height={32}
                 style={{ borderRadius: '50%', display: 'block', flexShrink: 0 }}
               />
             ) : (
               <div
                 style={{
-                  width: 36,
-                  height: 36,
+                  width: 32,
+                  height: 32,
                   borderRadius: '50%',
                   background: '#d8d8d4',
                   display: 'grid',
                   placeItems: 'center',
-                  fontSize: 13,
+                  fontSize: 12,
                   fontWeight: 600,
                   color: '#666',
                   flexShrink: 0,
@@ -119,7 +119,7 @@ export default async function Header({ user, t, ct }: HeaderProps) {
             <Link
               href="/api/auth/logout"
               style={{
-                height: 36,
+                height: 32,
                 display: 'inline-flex',
                 alignItems: 'center',
                 fontSize: 13,
@@ -138,12 +138,12 @@ export default async function Header({ user, t, ct }: HeaderProps) {
           <Link
             href="/login"
             style={{
-              height: 36,
+              height: 32,
               display: 'inline-flex',
               alignItems: 'center',
-              fontSize: 14,
+              fontSize: 13,
               fontWeight: 550,
-              padding: '0 16px',
+              padding: '0 14px',
               borderRadius: 9999,
               border: '1px solid var(--line)',
               background: 'var(--card)',

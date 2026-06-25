@@ -83,12 +83,12 @@ export default function NewIdeaModal({ authed, t }: NewIdeaModalProps) {
       <button
         onClick={openModal}
         style={{
-          height: 36,
+          height: 32,
           display: 'inline-flex',
           alignItems: 'center',
-          fontSize: 14,
+          fontSize: 13,
           fontWeight: 550,
-          padding: '0 16px',
+          padding: '0 14px',
           borderRadius: 9999,
           border: '1px solid var(--accent)',
           background: 'var(--accent)',
