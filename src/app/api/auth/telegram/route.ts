@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { telegramProvider } from '@/lib/auth/telegram-provider'
-import { upsertUser } from '@/lib/auth/upsert-user'
+import { upsertUser, setUserAvatar } from '@/lib/auth/upsert-user'
 import { createSession } from '@/lib/auth/session'
+import { storeTelegramAvatar } from '@/lib/auth/store-avatar'
 
 /**
  * GET /api/auth/telegram
@@ -14,6 +15,15 @@ export async function GET(req: NextRequest) {
   try {
     const identity = await telegramProvider.verify(params)
     const userId = upsertUser('telegram', identity)
+
+    // Download the widget photo_url locally while the link is fresh.
+    // auth_date (seconds epoch) is used as the cache-bust version — it stays
+    // stable for the same login session so repeated renders won't churn the URL.
+    // storeTelegramAvatar never throws; null means the download was skipped/failed.
+    const authDate = params.auth_date // already HMAC-verified above
+    const localAvatar = await storeTelegramAvatar(userId, identity.avatarUrl, authDate)
+    setUserAvatar(userId, localAvatar)
+
     await createSession(userId)
 
     // When deployed behind a reverse proxy, req.url may arrive as http://
