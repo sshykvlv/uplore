@@ -3,17 +3,9 @@
 import { useState, useRef, useEffect } from 'react'
 import { analytics } from '@/lib/umami'
 import type { ClientDict } from '@/lib/i18n/dictionaries'
+import { REACTION_EMOJIS } from '@/lib/reactions'
 
-const EMOJI_PICKER_SET = [
-  // everyday reactions
-  '🔥', '❤️', '👍', '🎉', '🚀', '💯',
-  '✨', '⭐', '💡', '🙌', '👏', '💪',
-  '😄', '😍', '🤩', '😎', '🤔', '👀',
-  '😂', '😅', '🙃', '😮', '👎', '🙏',
-  // creepy / weird block
-  '💀', '👻', '🤡', '👽', '🤖', '😈',
-  '👿', '🫠', '🥴', '🤯', '🫥', '🤪',
-]
+const EMOJI_PICKER_SET = REACTION_EMOJIS
 
 interface Reaction {
   emoji: string

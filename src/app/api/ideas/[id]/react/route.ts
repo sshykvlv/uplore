@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/auth/session'
 import { db } from '@/lib/db'
 import { getIdeaReactions } from '@/lib/queries'
+import { REACTION_EMOJIS } from '@/lib/reactions'
 
-const ALLOWED_EMOJIS = ['🔥', '🙌', '👀', '💯', '🚀', '👍', '❤️', '😄']
+const ALLOWED_EMOJIS: readonly string[] = REACTION_EMOJIS
 
 /**
  * POST /api/ideas/[id]/react
