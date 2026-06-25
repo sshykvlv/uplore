@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { getSession } from '@/lib/auth/session'
 import DevLoginForm from './DevLoginForm'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
+import TelegramLoginButton from '@/components/TelegramLoginButton'
 import { getDict, getLocale, LOCALES } from '@/lib/i18n/locale'
 
 export const metadata = {
@@ -25,18 +26,7 @@ export default async function LoginPage() {
     ? `${publicUrl.replace(/\/$/, '')}/api/auth/telegram`
     : '/api/auth/telegram'
 
-  const widgetHtml = botUsername
-    ? `<script
-        async
-        src="https://telegram.org/js/telegram-widget.js?22"
-        data-telegram-login="${botUsername}"
-        data-size="large"
-        data-radius="20"
-        data-auth-url="${authUrl}"
-        data-request-access="write"
-      ></script>`
-    : null
-  const hasTelegramWidget = Boolean(widgetHtml)
+  const hasTelegramWidget = Boolean(botUsername)
 
   return (
     <main
@@ -118,10 +108,7 @@ export default async function LoginPage() {
         </p>
 
         {hasTelegramWidget && (
-          <div
-            style={{ display: 'flex', justifyContent: 'center', minHeight: 48 }}
-            dangerouslySetInnerHTML={{ __html: widgetHtml! }}
-          />
+          <TelegramLoginButton botUsername={botUsername!} authUrl={authUrl} />
         )}
 
         {!hasTelegramWidget && !devLoginEnabled && (
