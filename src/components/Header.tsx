@@ -2,6 +2,7 @@ import Link from 'next/link'
 import type { SessionUser } from '@/lib/auth/session'
 import NewIdeaModal from '@/components/NewIdeaModal'
 import Avatar from '@/components/Avatar'
+import BrandMark from '@/components/BrandMark'
 import type { Dict, ClientDict } from '@/lib/i18n/dictionaries'
 
 interface HeaderProps {
@@ -55,21 +56,7 @@ export default async function Header({ user, t, ct }: HeaderProps) {
             fontSize: 18,
           }}
         >
-          <span
-            style={{
-              width: 22,
-              height: 22,
-              borderRadius: 7,
-              background: 'linear-gradient(150deg,#ff7a45,#e8602c)',
-              display: 'grid',
-              placeItems: 'center',
-              color: '#fff',
-              fontSize: 13,
-              boxShadow: '0 2px 8px rgba(232,96,44,.35)',
-            }}
-          >
-            ✦
-          </span>
+          <BrandMark size={22} />
           Uplore
         </Link>
 

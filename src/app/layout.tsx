@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
-import { Manrope, Sora } from 'next/font/google'
+import { Manrope } from 'next/font/google'
+import localFont from 'next/font/local'
 import './globals.css'
 import UmamiScript from '@/components/UmamiScript'
 
@@ -11,11 +12,11 @@ const manrope = Manrope({
   display: 'swap',
 })
 
-// Display font for the wordmark only (Latin "Uplore").
-const sora = Sora({
-  subsets: ['latin'],
-  weight: ['600', '700', '800'],
-  variable: '--font-sora',
+// Display font for the wordmark only (Latin "Uplore"). Self-hosted from Fontshare.
+const cabinet = localFont({
+  src: './fonts/CabinetGrotesk-Extrabold.woff2',
+  weight: '800',
+  variable: '--font-cabinet',
   display: 'swap',
 })
 
@@ -31,7 +32,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${manrope.variable} ${sora.variable}`}>
+    <html lang="en" className={`${manrope.variable} ${cabinet.variable}`}>
       <head>
         <UmamiScript />
       </head>

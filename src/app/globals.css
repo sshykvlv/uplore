@@ -34,7 +34,7 @@ body {
 
 /* Wordmark uses the display grotesk (Latin); falls back to the UI font. */
 .wordmark {
-  font-family: var(--font-sora), var(--font-manrope), sans-serif;
+  font-family: var(--font-cabinet), var(--font-manrope), sans-serif;
   letter-spacing: -0.03em;
 }
 
