@@ -73,7 +73,7 @@ export default function LanguageSwitcher({
                 if (l.code !== current) (e.currentTarget as HTMLButtonElement).style.color = 'var(--muted)'
               }}
             >
-              {l.code.toUpperCase()}
+              {l.badge}
             </button>
           </span>
         ))}

@@ -11,13 +11,16 @@ export type Locale = 'en' | 'ru' | 'uk' | 'pl'
 export interface LocaleMeta {
   code: Locale
   label: string
+  /** 2-letter badge shown in the compact switcher. Defaults to code uppercased;
+   *  Ukrainian is shown as "UA" (country code) since "UK" reads as Britain. */
+  badge: string
 }
 
 export const LOCALES: LocaleMeta[] = [
-  { code: 'en', label: 'English' },
-  { code: 'ru', label: 'Русский' },
-  { code: 'uk', label: 'Українська' },
-  { code: 'pl', label: 'Polski' },
+  { code: 'en', label: 'English', badge: 'EN' },
+  { code: 'ru', label: 'Русский', badge: 'RU' },
+  { code: 'uk', label: 'Українська', badge: 'UA' },
+  { code: 'pl', label: 'Polski', badge: 'PL' },
 ]
 
 /** Relative-time shape: functions so plural rules stay per-locale. */
