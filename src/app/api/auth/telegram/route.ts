@@ -16,13 +16,22 @@ export async function GET(req: NextRequest) {
     const identity = await telegramProvider.verify(params)
     const userId = upsertUser('telegram', identity)
 
-    // Download the widget photo_url locally while the link is fresh.
-    // auth_date (seconds epoch) is used as the cache-bust version — it stays
-    // stable for the same login session so repeated renders won't churn the URL.
-    // storeTelegramAvatar never throws; null means the download was skipped/failed.
-    const authDate = params.auth_date // already HMAC-verified above
-    const localAvatar = await storeTelegramAvatar(userId, identity.avatarUrl, authDate)
-    setUserAvatar(userId, localAvatar)
+    // Download the widget photo_url locally while the link is fresh (t.me
+    // hotlinks expire). auth_date (already HMAC-verified) is the stable
+    // cache-bust version. Avatar handling must NEVER fail the login.
+    if (identity.avatarUrl) {
+      const localAvatar = await storeTelegramAvatar(userId, identity.avatarUrl, params.auth_date)
+      if (localAvatar) {
+        setUserAvatar(userId, localAvatar)
+      } else {
+        // Transient download failure (timeout/404/redirect/etc) — keep any
+        // existing avatar instead of clobbering it to null.
+        console.warn('[auth/telegram] avatar download failed; keeping existing avatar', { userId })
+      }
+    } else {
+      // No Telegram photo on the account — clear any stale stored avatar.
+      setUserAvatar(userId, null)
+    }
 
     await createSession(userId)
 

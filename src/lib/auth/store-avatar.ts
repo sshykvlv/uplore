@@ -82,44 +82,62 @@ export async function storeTelegramAvatar(
     if (!isTelegramHost(parsed.hostname)) return null
 
     // --- Fetch with timeout and no redirects ---
+    // The single AbortController timeout spans BOTH the header fetch AND the
+    // body read — a slow-loris body (or one with a missing/false Content-Length)
+    // must not hang the login flow. clearTimeout only fires once the body is
+    // fully consumed (or we bail), in the finally below.
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), 5_000)
 
-    let res: Response
     try {
-      res = await fetch(photoUrl, {
+      const res = await fetch(photoUrl, {
         redirect: 'error', // refuse any 3xx — prevents redirect-to-internal SSRF
         signal: controller.signal,
       })
+
+      if (!res.ok) return null
+
+      // Require an image content-type
+      const ct = res.headers.get('content-type') ?? ''
+      if (!ct.startsWith('image/')) return null
+
+      // Fast-reject if the (honest) Content-Length already exceeds the cap.
+      const clHeader = Number(res.headers.get('content-length') ?? '0')
+      if (clHeader > MAX_AVATAR_BYTES) return null
+      if (!res.body) return null
+
+      // Stream the body, enforcing the size cap as bytes arrive so we never
+      // buffer more than MAX_AVATAR_BYTES even if Content-Length lied.
+      const reader = res.body.getReader()
+      const chunks: Buffer[] = []
+      let total = 0
+      for (;;) {
+        const { done, value } = await reader.read()
+        if (done) break
+        if (value) {
+          total += value.byteLength
+          if (total > MAX_AVATAR_BYTES) {
+            await reader.cancel()
+            return null
+          }
+          chunks.push(Buffer.from(value))
+        }
+      }
+      if (total === 0) return null
+
+      // --- Write to disk ---
+      // userId is typed number — no path traversal possible via template literal.
+      const filename = `avatar-tg-${userId}.jpg`
+      await mkdir(UPLOADS_PATH, { recursive: true }) // matches ideas route pattern
+      await writeFile(path.join(UPLOADS_PATH, filename), Buffer.concat(chunks, total))
+
+      // Cache-bust: prefer the caller-supplied version; fall back to byte-length
+      // (stable for identical photo data, no Date.now() dependency).
+      const v = version !== undefined ? String(version) : String(total)
+      return `/api/uploads/${filename}?v=${v}`
     } finally {
       clearTimeout(timeout)
     }
-
-    if (!res.ok) return null
-
-    // Require an image content-type
-    const ct = res.headers.get('content-type') ?? ''
-    if (!ct.startsWith('image/')) return null
-
-    // Enforce body size cap — read as ArrayBuffer so we control every byte.
-    // Even if Content-Length lies, we slice at MAX_AVATAR_BYTES.
-    const clHeader = Number(res.headers.get('content-length') ?? '0')
-    if (clHeader > MAX_AVATAR_BYTES) return null // fast-reject if header is honest
-
-    const raw = await res.arrayBuffer()
-    if (raw.byteLength > MAX_AVATAR_BYTES) return null // re-check actual bytes
-
-    // --- Write to disk ---
-    // userId is typed number — no path traversal possible via template literal.
-    const filename = `avatar-tg-${userId}.jpg`
-    const dir = UPLOADS_PATH
-    await mkdir(dir, { recursive: true }) // matches ideas route pattern (ensureUploadsDir)
-    await writeFile(path.join(dir, filename), Buffer.from(raw))
-
-    // Cache-bust: prefer the caller-supplied version; fall back to byte-length
-    // (stable for identical photo data, no Date.now() dependency).
-    const v = version !== undefined ? String(version) : String(raw.byteLength)
-    return `/api/uploads/${filename}?v=${v}`
   } catch {
     // Any unexpected error — never propagate to the login flow
     return null
