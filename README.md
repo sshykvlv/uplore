@@ -56,6 +56,8 @@ To reset all data: `docker compose down -v`
 | `ALLOW_DEV_LOGIN` | No | `false` | Set to `true` to enable username-only dev login. Always disabled in `NODE_ENV=production`. |
 | `NEXT_PUBLIC_UMAMI_URL` | No | — | Base URL of your Umami instance (e.g. `https://stats.example.com`). Leave blank to disable analytics. |
 | `NEXT_PUBLIC_UMAMI_WEBSITE_ID` | No | — | Website ID from your Umami dashboard. Required when `NEXT_PUBLIC_UMAMI_URL` is set. |
+| `ACCESS_CODE` | No | — | Shared team password. When set, every page requires the visitor to enter this code (or visit the shareable link). Leave unset to keep the site public. |
+| `GATE_TOKEN` | No | `granted_<ACCESS_CODE>` | Opaque value stored in the gate cookie. Auto-derived when unset. Set explicitly only if you need to invalidate existing sessions without changing the password. |
 
 *Without both `TELEGRAM_BOT_TOKEN` **and** `NEXT_PUBLIC_TELEGRAM_BOT_USERNAME` only dev login is available (set `ALLOW_DEV_LOGIN=true`).
 
@@ -137,6 +139,30 @@ npm run dev
 | Auth | Telegram Login Widget (pluggable adapter) |
 | Analytics | Umami (optional, cookieless) |
 | Packaging | Docker (single container, standalone output) |
+
+---
+
+## Private / team access
+
+Uplore is public by default (OSS-friendly). To restrict access to your team:
+
+1. Set `ACCESS_CODE` to any shared password in your `.env`.
+2. Optionally set `GATE_TOKEN` to a different opaque string (the value stored in the cookie). If you leave it unset, the gate derives it automatically as `granted_<ACCESS_CODE>` — this is fine for most deployments.
+3. Restart the container (no rebuild needed).
+
+From then on, any visitor who does not hold the gate cookie is redirected to `/gate`, where they type the password. On success a 180-day `uplore_gate` cookie is set and the visitor is sent to their original destination.
+
+**Shareable link** — to grant access without requiring someone to type the password:
+
+```
+https://<your-host>/gate?code=<ACCESS_CODE>
+```
+
+Visiting this URL auto-submits the code in the browser and sets the cookie immediately.
+
+**Disable the gate** — remove (or leave empty) `ACCESS_CODE` and restart. The middleware becomes a no-op and the site is fully public again.
+
+Note: the gate is separate from Telegram login. The gate controls whether a visitor can *see* the site at all; Telegram login controls whether they can post/vote/comment.
 
 ---
 
