@@ -40,24 +40,45 @@ export default async function GatePage({ searchParams }: Props) {
           background: 'var(--card)',
           border: '1px solid var(--line)',
           borderRadius: 'var(--radius)',
-          padding: '36px 28px',
+          padding: '36px 28px 32px',
           boxShadow: '0 4px 24px rgba(0,0,0,.05)',
+          textAlign: 'center',
         }}
       >
-        {/* Ember accent dot */}
+        {/* Brand mark — same as the login screen */}
         <div
           style={{
-            width: 10,
-            height: 10,
-            borderRadius: '50%',
-            background: 'var(--accent)',
-            marginBottom: 20,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+            fontWeight: 650,
+            fontSize: 18,
+            letterSpacing: '-0.02em',
+            color: 'var(--ink)',
+            marginBottom: 22,
           }}
-        />
+        >
+          <span
+            style={{
+              width: 26,
+              height: 26,
+              borderRadius: 8,
+              background: 'linear-gradient(150deg,#ff7a45,#e8602c)',
+              display: 'grid',
+              placeItems: 'center',
+              color: '#fff',
+              fontSize: 15,
+              boxShadow: '0 2px 8px rgba(232,96,44,.35)',
+            }}
+          >
+            ✦
+          </span>
+          Uplore
+        </div>
 
         <h1
           style={{
-            fontSize: 20,
+            fontSize: 19,
             fontWeight: 650,
             letterSpacing: '-0.02em',
             marginBottom: 6,
@@ -75,7 +96,7 @@ export default async function GatePage({ searchParams }: Props) {
             lineHeight: 1.5,
           }}
         >
-          This Uplore board is private. Enter the team password to continue.
+          This board is private. Enter the team password to continue.
         </p>
 
         <GateForm initialCode={code} next={redirectTo} />
