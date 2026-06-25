@@ -3,7 +3,6 @@ import { getSession } from '@/lib/auth/session'
 import DevLoginForm from './DevLoginForm'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
 import TelegramLoginButton from '@/components/TelegramLoginButton'
-import BrandMark from '@/components/BrandMark'
 import { getDict, getLocale, LOCALES } from '@/lib/i18n/locale'
 
 export const metadata = {
@@ -60,15 +59,13 @@ export default async function LoginPage() {
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: 8,
             fontWeight: 700,
-            fontSize: 18,
+            fontSize: 22,
             color: 'var(--ink)',
             textDecoration: 'none',
             marginBottom: 22,
           }}
         >
-          <BrandMark size={26} />
           Uplore
         </a>
 

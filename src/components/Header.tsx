@@ -2,7 +2,6 @@ import Link from 'next/link'
 import type { SessionUser } from '@/lib/auth/session'
 import NewIdeaModal from '@/components/NewIdeaModal'
 import Avatar from '@/components/Avatar'
-import BrandMark from '@/components/BrandMark'
 import type { Dict, ClientDict } from '@/lib/i18n/dictionaries'
 
 interface HeaderProps {
@@ -51,12 +50,10 @@ export default async function Header({ user, t, ct }: HeaderProps) {
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: 8,
             fontWeight: 700,
-            fontSize: 18,
+            fontSize: 20,
           }}
         >
-          <BrandMark size={22} />
           Uplore
         </Link>
 

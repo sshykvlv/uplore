@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import GateForm from './GateForm'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
-import BrandMark from '@/components/BrandMark'
 import { getDict, getClientDict, getLocale, LOCALES } from '@/lib/i18n/locale'
 
 export const metadata: Metadata = {
@@ -49,14 +48,12 @@ export default async function GatePage({ searchParams }: Props) {
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: 8,
             fontWeight: 700,
-            fontSize: 18,
+            fontSize: 22,
             color: 'var(--ink)',
             marginBottom: 22,
           }}
         >
-          <BrandMark size={26} />
           Uplore
         </div>
 
