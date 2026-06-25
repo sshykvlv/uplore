@@ -70,23 +70,26 @@ export default async function Header({ user, t, ct }: HeaderProps) {
               size={32}
             />
 
-            <Link
-              href="/api/auth/logout"
-              style={{
-                height: 32,
-                display: 'inline-flex',
-                alignItems: 'center',
-                fontSize: 13,
-                fontWeight: 500,
-                padding: '0 12px',
-                borderRadius: 9999,
-                border: '1px solid var(--line)',
-                background: 'var(--card)',
-                color: 'var(--muted)',
-              }}
-            >
-              {t.signOut}
-            </Link>
+            <form action="/api/auth/logout" method="POST" style={{ display: 'flex' }}>
+              <button
+                type="submit"
+                style={{
+                  height: 32,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  fontSize: 13,
+                  fontWeight: 500,
+                  padding: '0 12px',
+                  borderRadius: 9999,
+                  border: '1px solid var(--line)',
+                  background: 'var(--card)',
+                  color: 'var(--muted)',
+                  cursor: 'pointer',
+                }}
+              >
+                {t.signOut}
+              </button>
+            </form>
           </div>
         ) : (
           <Link
