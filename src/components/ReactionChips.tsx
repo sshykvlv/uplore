@@ -4,7 +4,16 @@ import { useState, useRef, useEffect } from 'react'
 import { analytics } from '@/lib/umami'
 import type { ClientDict } from '@/lib/i18n/dictionaries'
 
-const EMOJI_PICKER_SET = ['🔥', '🙌', '👀', '💯', '🚀', '👍', '❤️', '😄']
+const EMOJI_PICKER_SET = [
+  // everyday reactions
+  '🔥', '❤️', '👍', '🎉', '🚀', '💯',
+  '✨', '⭐', '💡', '🙌', '👏', '💪',
+  '😄', '😍', '🤩', '😎', '🤔', '👀',
+  '😂', '😅', '🙃', '😮', '👎', '🙏',
+  // creepy / weird block
+  '💀', '👻', '🤡', '👽', '🤖', '😈',
+  '👿', '🫠', '🥴', '🤯', '🫥', '🤪',
+]
 
 interface Reaction {
   emoji: string
@@ -140,17 +149,17 @@ export default function ReactionChips({ ideaId, initialReactions, authed, t }: R
           <div
             style={{
               position: 'absolute',
-              bottom: 'calc(100% + 6px)',
+              top: 'calc(100% + 6px)',
               left: 0,
               background: '#fff',
               border: '1px solid var(--line)',
-              borderRadius: 12,
-              boxShadow: '0 4px 20px rgba(0,0,0,.1)',
-              padding: '8px 10px',
-              display: 'flex',
-              gap: 4,
-              flexWrap: 'wrap',
-              maxWidth: 200,
+              borderRadius: 14,
+              boxShadow: '0 8px 28px rgba(0,0,0,.12)',
+              padding: 8,
+              display: 'grid',
+              gridTemplateColumns: 'repeat(6, 1fr)',
+              gap: 2,
+              width: 248,
               zIndex: 50,
             }}
           >
@@ -162,12 +171,21 @@ export default function ReactionChips({ ideaId, initialReactions, authed, t }: R
                   onClick={() => toggleReaction(emoji)}
                   style={{
                     fontSize: 20,
+                    lineHeight: 1,
+                    height: 36,
+                    display: 'grid',
+                    placeItems: 'center',
                     background: alreadyReacted ? 'var(--accent-soft)' : 'none',
                     border: alreadyReacted ? '1px solid #f3b79b' : '1px solid transparent',
-                    borderRadius: 8,
-                    padding: '4px 6px',
+                    borderRadius: 9,
                     cursor: 'pointer',
                     transition: '.1s',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!alreadyReacted) (e.currentTarget as HTMLButtonElement).style.background = '#f5f5f3'
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!alreadyReacted) (e.currentTarget as HTMLButtonElement).style.background = 'none'
                   }}
                   title={emoji}
                 >

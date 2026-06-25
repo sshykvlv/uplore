@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import type { SessionUser } from '@/lib/auth/session'
 import NewIdeaModal from '@/components/NewIdeaModal'
+import Avatar from '@/components/Avatar'
 import type { Dict, ClientDict } from '@/lib/i18n/dictionaries'
 
 interface HeaderProps {
@@ -9,15 +10,6 @@ interface HeaderProps {
   t: Dict
   /** Serializable client dict passed through to client components */
   ct: ClientDict
-}
-
-function initials(user: SessionUser): string {
-  const name = user.display_name ?? user.username ?? '?'
-  return name
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((w) => w[0]?.toUpperCase() ?? '')
-    .join('')
 }
 
 /**
@@ -88,33 +80,11 @@ export default async function Header({ user, t, ct }: HeaderProps) {
 
         {user ? (
           <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 8 }}>
-            {user.avatar_url ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={user.avatar_url}
-                alt={user.display_name ?? user.username ?? 'avatar'}
-                width={32}
-                height={32}
-                style={{ borderRadius: '50%', display: 'block', flexShrink: 0 }}
-              />
-            ) : (
-              <div
-                style={{
-                  width: 32,
-                  height: 32,
-                  borderRadius: '50%',
-                  background: '#d8d8d4',
-                  display: 'grid',
-                  placeItems: 'center',
-                  fontSize: 12,
-                  fontWeight: 600,
-                  color: '#666',
-                  flexShrink: 0,
-                }}
-              >
-                {initials(user)}
-              </div>
-            )}
+            <Avatar
+              avatarUrl={user.avatar_url}
+              name={user.display_name ?? user.username}
+              size={32}
+            />
 
             <Link
               href="/api/auth/logout"
