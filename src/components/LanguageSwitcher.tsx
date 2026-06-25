@@ -9,9 +9,16 @@ interface LanguageSwitcherProps {
   locales: LocaleMeta[]
   /** compact=true → only the 2-letter code shown (for gate/login screens) */
   compact?: boolean
+  /** inline=true → ultra-compact "EN · RU · UK · PL" row (for the footer) */
+  inline?: boolean
 }
 
-export default function LanguageSwitcher({ current, locales, compact = false }: LanguageSwitcherProps) {
+export default function LanguageSwitcher({
+  current,
+  locales,
+  compact = false,
+  inline = false,
+}: LanguageSwitcherProps) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   const router = useRouter()
@@ -30,6 +37,48 @@ export default function LanguageSwitcher({ current, locales, compact = false }: 
     document.cookie = `locale=${code}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`
     setOpen(false)
     router.refresh()
+  }
+
+  // Ultra-compact inline row: EN · RU · UK · PL — meant for the footer.
+  if (inline) {
+    return (
+      <div
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 6,
+          fontSize: 12.5,
+        }}
+      >
+        {locales.map((l, i) => (
+          <span key={l.code} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            {i > 0 && <span style={{ color: '#d8d8d2' }}>·</span>}
+            <button
+              onClick={() => select(l.code)}
+              aria-current={l.code === current}
+              style={{
+                background: 'none',
+                border: 'none',
+                padding: '2px 1px',
+                cursor: 'pointer',
+                fontSize: 12.5,
+                fontWeight: l.code === current ? 650 : 500,
+                color: l.code === current ? 'var(--accent)' : 'var(--muted)',
+                transition: '.12s',
+              }}
+              onMouseEnter={(e) => {
+                if (l.code !== current) (e.currentTarget as HTMLButtonElement).style.color = 'var(--ink)'
+              }}
+              onMouseLeave={(e) => {
+                if (l.code !== current) (e.currentTarget as HTMLButtonElement).style.color = 'var(--muted)'
+              }}
+            >
+              {l.code.toUpperCase()}
+            </button>
+          </span>
+        ))}
+      </div>
+    )
   }
 
   const currentLabel = locales.find((l) => l.code === current)?.label ?? current.toUpperCase()

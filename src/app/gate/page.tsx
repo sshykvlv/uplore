@@ -100,8 +100,8 @@ export default async function GatePage({ searchParams }: Props) {
       </div>
 
       {/* Language switcher below card */}
-      <div style={{ marginTop: 20 }}>
-        <LanguageSwitcher current={locale} locales={LOCALES} compact />
+      <div style={{ marginTop: 18 }}>
+        <LanguageSwitcher current={locale} locales={LOCALES} inline />
       </div>
     </main>
   )

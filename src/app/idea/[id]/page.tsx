@@ -7,8 +7,9 @@ import VoteCapsule from '@/components/VoteCapsule'
 import ReactionChips from '@/components/ReactionChips'
 import ImageGallery from '@/components/ImageGallery'
 import AddCommentForm from '@/components/AddCommentForm'
+import LanguageSwitcher from '@/components/LanguageSwitcher'
 import { relativeTime } from '@/lib/time'
-import { getDict, getClientDict } from '@/lib/i18n/locale'
+import { getDict, getClientDict, getLocale, LOCALES } from '@/lib/i18n/locale'
 
 export const dynamic = 'force-dynamic'
 
@@ -33,6 +34,7 @@ export default async function IdeaDetailPage({ params }: PageProps) {
   const comments = getIdeaComments(id)
   const t = await getDict()
   const ct = await getClientDict()
+  const locale = await getLocale()
 
   return (
     <>
@@ -199,13 +201,17 @@ export default async function IdeaDetailPage({ params }: PageProps) {
 
       <footer
         style={{
-          textAlign: 'center',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 10,
           color: '#bdbdb7',
           fontSize: 12.5,
           padding: 24,
         }}
       >
-        {t.footer}
+        <LanguageSwitcher current={locale} locales={LOCALES} inline />
+        <span>{t.footer}</span>
       </footer>
     </>
   )

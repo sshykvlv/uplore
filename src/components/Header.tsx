@@ -1,8 +1,6 @@
 import Link from 'next/link'
 import type { SessionUser } from '@/lib/auth/session'
 import NewIdeaModal from '@/components/NewIdeaModal'
-import LanguageSwitcher from '@/components/LanguageSwitcher'
-import { getLocale, LOCALES } from '@/lib/i18n/locale'
 import type { Dict, ClientDict } from '@/lib/i18n/dictionaries'
 
 interface HeaderProps {
@@ -27,8 +25,6 @@ function initials(user: SessionUser): string {
  * Sticky, blurred white, subtle shadow.
  */
 export default async function Header({ user, t, ct }: HeaderProps) {
-  const locale = await getLocale()
-
   return (
     <header
       style={{
@@ -86,9 +82,6 @@ export default async function Header({ user, t, ct }: HeaderProps) {
         </Link>
 
         <div style={{ flex: 1 }} />
-
-        {/* Language switcher */}
-        <LanguageSwitcher current={locale} locales={LOCALES} />
 
         {/* New idea modal — passes serializable client dict */}
         <NewIdeaModal authed={!!user} t={ct} />
