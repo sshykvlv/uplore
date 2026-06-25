@@ -71,8 +71,7 @@ export default function IdeaCard({ idea, authed, t, ct }: IdeaCardProps) {
           <span style={{ fontWeight: 550, color: '#6f6f69' }}>{authorLabel(idea)}</span>
           <span style={{ width: 3, height: 3, borderRadius: '50%', background: '#cfcfca', flexShrink: 0 }} />
           <span>{relativeTime(idea.created_at, t.time)}</span>
-          <span style={{ width: 3, height: 3, borderRadius: '50%', background: '#cfcfca', flexShrink: 0 }} />
-          <Link href={`/idea/${idea.id}`} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+          <Link href={`/idea/${idea.id}`} className="comment-link" style={{ marginLeft: 'auto' }}>
             💬 {idea.comment_count}
           </Link>
         </div>

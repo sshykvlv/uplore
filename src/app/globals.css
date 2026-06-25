@@ -38,6 +38,26 @@ body {
   letter-spacing: -0.03em;
 }
 
+/* Comment counter on a feed card — a clear tappable pill (was plain grey text). */
+.comment-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--muted);
+  font-weight: 600;
+  line-height: 1.4;
+  transition: 0.13s;
+}
+.comment-link:hover {
+  border-color: #dcdcd8;
+  background: #f7f7f5;
+  color: #6f6f69;
+}
+
 a {
   color: inherit;
   text-decoration: none;

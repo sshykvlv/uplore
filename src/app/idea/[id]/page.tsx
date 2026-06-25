@@ -43,7 +43,7 @@ export default async function IdeaDetailPage({ params }: PageProps) {
         style={{
           maxWidth: 720,
           margin: '0 auto',
-          padding: '10px 16px 60px',
+          padding: '10px 18px 60px',
         }}
       >
         <Link

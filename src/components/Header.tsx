@@ -23,7 +23,7 @@ export default async function Header({ user, t, ct }: HeaderProps) {
         position: 'sticky',
         top: 0,
         zIndex: 10,
-        padding: '14px 16px 6px',
+        padding: '14px 18px 6px',
         background: 'linear-gradient(var(--bg), var(--bg) 65%, rgba(251,251,250,0))',
       }}
     >
