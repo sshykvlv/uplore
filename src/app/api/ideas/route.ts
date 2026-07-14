@@ -5,6 +5,7 @@ import { writeFile } from 'fs/promises'
 import path from 'path'
 import crypto from 'crypto'
 import fs from 'fs'
+import { notifyNewIdea } from '@/lib/notify-telegram'
 
 const UPLOADS_PATH = process.env.UPLOADS_PATH ?? './uploads'
 
@@ -100,6 +101,12 @@ export async function POST(req: NextRequest) {
       insertImage.run(ideaId, `/uploads/${filename}`, i)
     }
   }
+
+  void notifyNewIdea({
+    id: ideaId,
+    body: bodyText,
+    authorName: user.display_name ?? user.username ?? 'Someone',
+  })
 
   return NextResponse.json({ id: ideaId }, { status: 201 })
 }
