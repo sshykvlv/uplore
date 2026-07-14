@@ -130,6 +130,10 @@ export interface ClientDict {
   // ReactionChips
   react: string
 
+  // ArchiveButton (owner only)
+  archiveIdea: string
+  unarchiveIdea: string
+
   // GateForm
   teamPassword: string
   enter: string
@@ -229,6 +233,8 @@ const enClient: ClientDict = {
   postingComment: 'Posting…',
   failedToPostComment: 'Failed to post comment.',
   react: 'React',
+  archiveIdea: 'Archive',
+  unarchiveIdea: 'Restore',
   teamPassword: 'Team password',
   enter: 'Enter',
   verifyingLink: 'Verifying link…',
@@ -328,6 +334,8 @@ const ruClient: ClientDict = {
   postingComment: 'Отправляем…',
   failedToPostComment: 'Не удалось отправить комментарий.',
   react: 'Реакция',
+  archiveIdea: 'Архивировать',
+  unarchiveIdea: 'Вернуть',
   teamPassword: 'Командный пароль',
   enter: 'Войти',
   verifyingLink: 'Проверяем ссылку…',
@@ -427,6 +435,8 @@ const ukClient: ClientDict = {
   postingComment: 'Надсилаємо…',
   failedToPostComment: 'Не вдалося надіслати коментар.',
   react: 'Реакція',
+  archiveIdea: 'Архівувати',
+  unarchiveIdea: 'Повернути',
   teamPassword: 'Командний пароль',
   enter: 'Увійти',
   verifyingLink: 'Перевіряємо посилання…',
@@ -526,6 +536,8 @@ const plClient: ClientDict = {
   postingComment: 'Wysyłanie…',
   failedToPostComment: 'Nie udało się wysłać komentarza.',
   react: 'Reakcja',
+  archiveIdea: 'Archiwizuj',
+  unarchiveIdea: 'Przywróć',
   teamPassword: 'Hasło zespołu',
   enter: 'Wejdź',
   verifyingLink: 'Weryfikacja linku…',

@@ -42,6 +42,12 @@ function openDb(): Database.Database {
       created_at TEXT NOT NULL DEFAULT (datetime('now'))
     );
 
+    CREATE TABLE IF NOT EXISTS idea_archive_log (
+      idea_id     INTEGER PRIMARY KEY REFERENCES ideas(id) ON DELETE CASCADE,
+      archived_by INTEGER NOT NULL REFERENCES users(id),
+      archived_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
     CREATE TABLE IF NOT EXISTS idea_images (
       id       INTEGER PRIMARY KEY AUTOINCREMENT,
       idea_id  INTEGER NOT NULL REFERENCES ideas(id) ON DELETE CASCADE,

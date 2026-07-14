@@ -1,12 +1,14 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getSession } from '@/lib/auth/session'
+import { isOwner } from '@/lib/auth/owner'
 import { getIdeaById, getIdeaComments } from '@/lib/queries'
 import Header from '@/components/Header'
 import VoteCapsule from '@/components/VoteCapsule'
 import ReactionChips from '@/components/ReactionChips'
 import ImageGallery from '@/components/ImageGallery'
 import AddCommentForm from '@/components/AddCommentForm'
+import ArchiveButton from '@/components/ArchiveButton'
 import LanguageSwitcher from '@/components/LanguageSwitcher'
 import Avatar from '@/components/Avatar'
 import { relativeTime } from '@/lib/time'
@@ -31,6 +33,7 @@ export default async function IdeaDetailPage({ params }: PageProps) {
   const t = await getDict()
   const ct = await getClientDict()
   const locale = await getLocale()
+  const ownerViewing = isOwner(user?.id ?? null)
 
   return (
     <>
@@ -112,6 +115,9 @@ export default async function IdeaDetailPage({ params }: PageProps) {
                 <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
                   💬 {idea.comment_count}
                 </span>
+                {ownerViewing && (
+                  <ArchiveButton ideaId={idea.id} initialArchived={idea.archived} t={ct} />
+                )}
               </div>
 
               <ReactionChips

@@ -28,6 +28,7 @@ export interface IdeaRow {
   score: number
   comment_count: number
   user_vote: number | null // +1 | -1 | null
+  archived: boolean
   images: IdeaImage[]
   reactions: ReactionCount[]
 }
@@ -55,6 +56,7 @@ export function getFeedIdeas(userId: number | null): IdeaRow[] {
        LEFT JOIN votes v ON v.idea_id = i.id
        LEFT JOIN comments c ON c.idea_id = i.id
        LEFT JOIN votes uv ON uv.idea_id = i.id AND uv.user_id = ?
+       WHERE i.id NOT IN (SELECT idea_id FROM idea_archive_log)
        GROUP BY i.id
        ORDER BY score DESC, i.created_at DESC`,
     )
@@ -73,6 +75,7 @@ export function getFeedIdeas(userId: number | null): IdeaRow[] {
 
   return rows.map((row) => ({
     ...row,
+    archived: false,
     images: getIdeaImages(row.id),
     reactions: getIdeaReactions(row.id, userId),
   }))
@@ -91,12 +94,14 @@ export function getIdeaById(id: number, userId: number | null): IdeaRow | null {
         u.avatar_url,
         COALESCE(SUM(v.value), 0) AS score,
         COUNT(DISTINCT c.id)      AS comment_count,
-        uv.value                  AS user_vote
+        uv.value                  AS user_vote,
+        (al.idea_id IS NOT NULL)  AS archived
        FROM ideas i
        JOIN users u ON u.id = i.author_id
        LEFT JOIN votes v ON v.idea_id = i.id
        LEFT JOIN comments c ON c.idea_id = i.id
        LEFT JOIN votes uv ON uv.idea_id = i.id AND uv.user_id = ?
+       LEFT JOIN idea_archive_log al ON al.idea_id = i.id
        WHERE i.id = ?
        GROUP BY i.id`,
     )
@@ -112,6 +117,7 @@ export function getIdeaById(id: number, userId: number | null): IdeaRow | null {
         score: number
         comment_count: number
         user_vote: number | null
+        archived: number
       }
     | undefined
 
@@ -119,6 +125,7 @@ export function getIdeaById(id: number, userId: number | null): IdeaRow | null {
 
   return {
     ...row,
+    archived: !!row.archived,
     images: getIdeaImages(row.id),
     reactions: getIdeaReactions(row.id, userId),
   }
