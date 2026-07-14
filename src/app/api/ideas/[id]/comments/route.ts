@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getSession } from '@/lib/auth/session'
 import { db } from '@/lib/db'
+import { notifyNewComment } from '@/lib/notify-telegram'
 
 /**
  * POST /api/ideas/[id]/comments
@@ -15,8 +16,18 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   const ideaId = parseInt(params.id, 10)
   if (isNaN(ideaId)) return NextResponse.json({ error: 'Invalid idea id' }, { status: 400 })
 
-  // Verify idea exists
-  const idea = db.prepare('SELECT id FROM ideas WHERE id = ?').get(ideaId)
+  // Verify idea exists, and fetch its author for the reply notification below
+  const idea = db
+    .prepare(
+      `SELECT ideas.id AS id, users.id AS author_id, users.provider AS author_provider,
+              users.provider_id AS author_provider_id
+       FROM ideas
+       JOIN users ON users.id = ideas.author_id
+       WHERE ideas.id = ?`,
+    )
+    .get(ideaId) as
+    | { id: number; author_id: number; author_provider: string; author_provider_id: string }
+    | undefined
   if (!idea) return NextResponse.json({ error: 'Idea not found' }, { status: 404 })
 
   let body: { body?: string }
@@ -39,6 +50,15 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
       `INSERT INTO comments (idea_id, author_id, body, created_at) VALUES (?, ?, ?, datetime('now'))`,
     )
     .run(ideaId, user.id, text)
+
+  if (idea.author_provider === 'telegram' && idea.author_id !== user.id) {
+    void notifyNewComment({
+      ideaId,
+      ideaAuthorProviderId: idea.author_provider_id,
+      commenterName: user.display_name ?? user.username ?? 'Someone',
+      commentBody: text,
+    })
+  }
 
   return NextResponse.json({ id: result.lastInsertRowid }, { status: 201 })
 }
