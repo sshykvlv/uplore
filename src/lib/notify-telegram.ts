@@ -1,8 +1,12 @@
 const TELEGRAM_API = 'https://api.telegram.org'
 const MAX_SNIPPET_LENGTH = 200
 
-async function sendTelegramMessage(chatId: string, text: string, threadId?: string): Promise<void> {
-  const botToken = process.env.TELEGRAM_BOT_TOKEN
+async function sendTelegramMessage(
+  chatId: string,
+  text: string,
+  threadId?: string,
+  botToken = process.env.TELEGRAM_BOT_TOKEN,
+): Promise<void> {
   if (!botToken) return
 
   try {
@@ -42,8 +46,12 @@ export async function notifyNewIdea(idea: {
   const chatId = process.env.TELEGRAM_TEAM_CHAT_ID
   if (!chatId) return
 
+  // Team-chat posts go out via a separate bot identity so the login/DM bot
+  // doesn't also have to be a member of the team's group chat. Falls back to
+  // the login/DM bot for self-hosters who don't run a second bot.
+  const notifyBotToken = process.env.TELEGRAM_NOTIFY_BOT_TOKEN ?? process.env.TELEGRAM_BOT_TOKEN
   const text = `💡 New idea from ${idea.authorName}\n${truncate(idea.body, MAX_SNIPPET_LENGTH)}\n\n${ideaUrl(idea.id)}`
-  await sendTelegramMessage(chatId, text, process.env.TELEGRAM_TEAM_THREAD_ID)
+  await sendTelegramMessage(chatId, text, process.env.TELEGRAM_TEAM_THREAD_ID, notifyBotToken)
 }
 
 export async function notifyNewComment(params: {

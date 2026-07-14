@@ -125,6 +125,32 @@ describe('notifyNewIdea', () => {
     expect(loggedArgs).not.toContain('super-secret-token')
     errorSpy.mockRestore()
   })
+
+  it('uses TELEGRAM_NOTIFY_BOT_TOKEN for the team chat when set, instead of TELEGRAM_BOT_TOKEN', async () => {
+    process.env.TELEGRAM_TEAM_CHAT_ID = '-100123'
+    process.env.TELEGRAM_BOT_TOKEN = 'login-dm-token'
+    process.env.TELEGRAM_NOTIFY_BOT_TOKEN = 'notify-token'
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, text: async () => '' })
+    vi.stubGlobal('fetch', fetchMock)
+
+    await notifyNewIdea({ id: 1, body: 'x', authorName: 'Sasha' })
+
+    const [url] = fetchMock.mock.calls[0]
+    expect(url).toBe('https://api.telegram.org/botnotify-token/sendMessage')
+  })
+
+  it('falls back to TELEGRAM_BOT_TOKEN for the team chat when TELEGRAM_NOTIFY_BOT_TOKEN is unset', async () => {
+    process.env.TELEGRAM_TEAM_CHAT_ID = '-100123'
+    process.env.TELEGRAM_BOT_TOKEN = 'login-dm-token'
+    delete process.env.TELEGRAM_NOTIFY_BOT_TOKEN
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, text: async () => '' })
+    vi.stubGlobal('fetch', fetchMock)
+
+    await notifyNewIdea({ id: 1, body: 'x', authorName: 'Sasha' })
+
+    const [url] = fetchMock.mock.calls[0]
+    expect(url).toBe('https://api.telegram.org/botlogin-dm-token/sendMessage')
+  })
 })
 
 describe('notifyNewComment', () => {
@@ -162,5 +188,22 @@ describe('notifyNewComment', () => {
     })
 
     expect(fetchMock).not.toHaveBeenCalled()
+  })
+
+  it('always uses TELEGRAM_BOT_TOKEN, ignoring TELEGRAM_NOTIFY_BOT_TOKEN', async () => {
+    process.env.TELEGRAM_BOT_TOKEN = 'login-dm-token'
+    process.env.TELEGRAM_NOTIFY_BOT_TOKEN = 'notify-token'
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, text: async () => '' })
+    vi.stubGlobal('fetch', fetchMock)
+
+    await notifyNewComment({
+      ideaId: 1,
+      ideaAuthorProviderId: '123',
+      commenterName: 'Dana',
+      commentBody: 'x',
+    })
+
+    const [url] = fetchMock.mock.calls[0]
+    expect(url).toBe('https://api.telegram.org/botlogin-dm-token/sendMessage')
   })
 })
