@@ -50,7 +50,7 @@ export async function notifyNewIdea(idea: {
   // doesn't also have to be a member of the team's group chat. Falls back to
   // the login/DM bot for self-hosters who don't run a second bot.
   const notifyBotToken = process.env.TELEGRAM_NOTIFY_BOT_TOKEN ?? process.env.TELEGRAM_BOT_TOKEN
-  const text = `💡 New idea from ${idea.authorName}\n${truncate(idea.body, MAX_SNIPPET_LENGTH)}\n\n${ideaUrl(idea.id)}`
+  const text = `💡 Новая идея от ${idea.authorName}:\n${truncate(idea.body, MAX_SNIPPET_LENGTH)}\n\n${ideaUrl(idea.id)}`
   await sendTelegramMessage(chatId, text, process.env.TELEGRAM_TEAM_THREAD_ID, notifyBotToken)
 }
 
@@ -60,6 +60,6 @@ export async function notifyNewComment(params: {
   commenterName: string
   commentBody: string
 }): Promise<void> {
-  const text = `💬 ${params.commenterName} replied to your idea\n${truncate(params.commentBody, MAX_SNIPPET_LENGTH)}\n\n${ideaUrl(params.ideaId)}`
+  const text = `💬 ${params.commenterName} комментирует вашу идею:\n${truncate(params.commentBody, MAX_SNIPPET_LENGTH)}\n\n${ideaUrl(params.ideaId)}`
   await sendTelegramMessage(params.ideaAuthorProviderId, text)
 }

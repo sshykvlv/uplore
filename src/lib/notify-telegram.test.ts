@@ -170,7 +170,7 @@ describe('notifyNewComment', () => {
     expect(fetchMock).toHaveBeenCalledTimes(1)
     const payload = JSON.parse(fetchMock.mock.calls[0][1].body)
     expect(payload.chat_id).toBe('999888777')
-    expect(payload.text).toContain('Dana replied to your idea')
+    expect(payload.text).toContain('Dana комментирует вашу идею')
     expect(payload.text).toContain('Love this!')
     expect(payload.text).toContain('https://ideas.norm.place/idea/7')
   })
