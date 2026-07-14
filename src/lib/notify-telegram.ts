@@ -17,7 +17,7 @@ async function sendTelegramMessage(chatId: string, text: string, threadId?: stri
     })
     if (!res.ok) {
       const body = await res.text()
-      console.error(`[notify-telegram] sendMessage failed (${res.status}): ${body}`)
+      console.error(`[notify-telegram] sendMessage failed (${res.status}): ${body.replaceAll(botToken, '<redacted>')}`)
     }
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err)

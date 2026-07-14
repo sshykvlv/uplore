@@ -107,6 +107,24 @@ describe('notifyNewIdea', () => {
     expect(loggedArgs).not.toContain('super-secret-token')
     errorSpy.mockRestore()
   })
+
+  it('redacts the bot token from a non-ok response body too', async () => {
+    process.env.TELEGRAM_TEAM_CHAT_ID = '-100123'
+    process.env.TELEGRAM_BOT_TOKEN = 'super-secret-token'
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: false,
+      status: 403,
+      text: async () => 'Forbidden: token super-secret-token is invalid',
+    })
+    vi.stubGlobal('fetch', fetchMock)
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    await notifyNewIdea({ id: 1, body: 'x', authorName: 'Sasha' })
+
+    const loggedArgs = errorSpy.mock.calls.flat().join(' ')
+    expect(loggedArgs).not.toContain('super-secret-token')
+    errorSpy.mockRestore()
+  })
 })
 
 describe('notifyNewComment', () => {
