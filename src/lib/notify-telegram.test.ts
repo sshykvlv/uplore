@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { notifyNewIdea } from './notify-telegram'
+import { notifyNewIdea, notifyNewComment } from './notify-telegram'
 
 const ORIGINAL_ENV = { ...process.env }
 
@@ -90,5 +90,59 @@ describe('notifyNewIdea', () => {
     await expect(
       notifyNewIdea({ id: 1, body: 'x', authorName: 'Sasha' }),
     ).resolves.toBeUndefined()
+  })
+
+  it('redacts the bot token from logged errors', async () => {
+    process.env.TELEGRAM_TEAM_CHAT_ID = '-100123'
+    process.env.TELEGRAM_BOT_TOKEN = 'super-secret-token'
+    const fetchMock = vi.fn().mockRejectedValue(
+      new Error('Failed to parse URL from https://api.telegram.org/botsuper-secret-token/sendMessage'),
+    )
+    vi.stubGlobal('fetch', fetchMock)
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    await notifyNewIdea({ id: 1, body: 'x', authorName: 'Sasha' })
+
+    const loggedArgs = errorSpy.mock.calls.flat().join(' ')
+    expect(loggedArgs).not.toContain('super-secret-token')
+    errorSpy.mockRestore()
+  })
+})
+
+describe('notifyNewComment', () => {
+  it('DMs the idea author using their provider_id as chat_id', async () => {
+    process.env.TELEGRAM_BOT_TOKEN = 'test-token'
+    process.env.PUBLIC_URL = 'https://ideas.norm.place'
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true, text: async () => '' })
+    vi.stubGlobal('fetch', fetchMock)
+
+    await notifyNewComment({
+      ideaId: 7,
+      ideaAuthorProviderId: '999888777',
+      commenterName: 'Dana',
+      commentBody: 'Love this!',
+    })
+
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+    const payload = JSON.parse(fetchMock.mock.calls[0][1].body)
+    expect(payload.chat_id).toBe('999888777')
+    expect(payload.text).toContain('Dana replied to your idea')
+    expect(payload.text).toContain('Love this!')
+    expect(payload.text).toContain('https://ideas.norm.place/idea/7')
+  })
+
+  it('does nothing when TELEGRAM_BOT_TOKEN is unset', async () => {
+    delete process.env.TELEGRAM_BOT_TOKEN
+    const fetchMock = vi.fn()
+    vi.stubGlobal('fetch', fetchMock)
+
+    await notifyNewComment({
+      ideaId: 1,
+      ideaAuthorProviderId: '123',
+      commenterName: 'Dana',
+      commentBody: 'x',
+    })
+
+    expect(fetchMock).not.toHaveBeenCalled()
   })
 })

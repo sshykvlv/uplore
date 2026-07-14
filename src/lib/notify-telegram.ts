@@ -20,7 +20,8 @@ async function sendTelegramMessage(chatId: string, text: string, threadId?: stri
       console.error(`[notify-telegram] sendMessage failed (${res.status}): ${body}`)
     }
   } catch (err) {
-    console.error('[notify-telegram] sendMessage threw:', err)
+    const message = err instanceof Error ? err.message : String(err)
+    console.error(`[notify-telegram] sendMessage threw: ${message.replaceAll(botToken, '<redacted>')}`)
   }
 }
 
@@ -43,4 +44,14 @@ export async function notifyNewIdea(idea: {
 
   const text = `💡 New idea from ${idea.authorName}\n${truncate(idea.body, MAX_SNIPPET_LENGTH)}\n\n${ideaUrl(idea.id)}`
   await sendTelegramMessage(chatId, text, process.env.TELEGRAM_TEAM_THREAD_ID)
+}
+
+export async function notifyNewComment(params: {
+  ideaId: number
+  ideaAuthorProviderId: string
+  commenterName: string
+  commentBody: string
+}): Promise<void> {
+  const text = `💬 ${params.commenterName} replied to your idea\n${truncate(params.commentBody, MAX_SNIPPET_LENGTH)}\n\n${ideaUrl(params.ideaId)}`
+  await sendTelegramMessage(params.ideaAuthorProviderId, text)
 }
