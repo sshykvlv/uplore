@@ -28,17 +28,24 @@ export async function GET(req: NextRequest) {
     ? new URL('/api/auth/telegram', publicUrl).toString()
     : new URL('/api/auth/telegram', req.url).toString()
 
-  const { url, state, nonce, codeVerifier } = await buildAuthUrl({ clientId, redirectUri })
+  try {
+    const { url, state, nonce, codeVerifier } = await buildAuthUrl({ clientId, redirectUri })
 
-  const pending = signPending({ state, nonce, codeVerifier }, PENDING_TTL_SEC)
+    const pending = signPending({ state, nonce, codeVerifier }, PENDING_TTL_SEC)
 
-  const res = NextResponse.redirect(url)
-  res.cookies.set(PENDING_AUTH_COOKIE, pending, {
-    httpOnly: true,
-    sameSite: 'lax',
-    path: '/',
-    maxAge: PENDING_TTL_SEC,
-    secure: process.env.NODE_ENV === 'production',
-  })
-  return res
+    const res = NextResponse.redirect(url)
+    res.cookies.set(PENDING_AUTH_COOKIE, pending, {
+      httpOnly: true,
+      sameSite: 'lax',
+      path: '/',
+      maxAge: PENDING_TTL_SEC,
+      secure: process.env.NODE_ENV === 'production',
+    })
+    return res
+  } catch (error) {
+    const errorUrl = publicUrl
+      ? new URL('/?error=telegram', publicUrl).toString()
+      : new URL('/?error=telegram', req.url).toString()
+    return NextResponse.redirect(errorUrl)
+  }
 }

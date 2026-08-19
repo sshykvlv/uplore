@@ -79,6 +79,7 @@ export async function verifyCallback(opts: {
   const { payload } = await jwtVerify(tokens.id_token, getJwks(), {
     issuer: ISSUER,
     audience: opts.clientId,
+    algorithms: ["RS256"],
   })
   if (payload.nonce !== opts.expectedNonce) throw new Error('nonce mismatch')
   if (!payload.sub) throw new Error('no sub in id_token')
