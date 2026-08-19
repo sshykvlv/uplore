@@ -1,14 +1,3 @@
-interface TelegramLoginButtonProps {
-  /**
-   * @deprecated Unused since the OIDC migration — kept optional so existing
-   * call sites that still pass it don't need to change. Login always starts
-   * at /api/auth/telegram/start.
-   */
-  botUsername?: string
-  /** @deprecated Unused since the OIDC migration, see botUsername above. */
-  authUrl?: string
-}
-
 /**
  * Telegram login entry point.
  *
@@ -16,9 +5,9 @@ interface TelegramLoginButtonProps {
  * replaces itself with an iframe). That flow is retired in favour of
  * Telegram Login via OIDC: this is now a plain link that starts the
  * authorize redirect at /api/auth/telegram/start, which sets a pending
- * cookie and 302s to Telegram. No client-side JS needed.
+ * cookie and 302s to Telegram. No client-side JS or env-derived props needed.
  */
-export default function TelegramLoginButton(_props: TelegramLoginButtonProps) {
+export default function TelegramLoginButton() {
   return (
     <div style={{ display: 'flex', justifyContent: 'center', minHeight: 48 }}>
       <a

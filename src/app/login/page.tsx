@@ -19,15 +19,6 @@ export default async function LoginPage() {
   const devLoginEnabled =
     process.env.ALLOW_DEV_LOGIN === 'true' && process.env.NODE_ENV !== 'production'
 
-  const botUsername = process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME?.trim()
-  const publicUrl = process.env.PUBLIC_URL?.trim()
-
-  const authUrl = publicUrl
-    ? `${publicUrl.replace(/\/$/, '')}/api/auth/telegram`
-    : '/api/auth/telegram'
-
-  const hasTelegramWidget = Boolean(botUsername)
-
   return (
     <main
       style={{
@@ -91,44 +82,24 @@ export default async function LoginPage() {
           {t.signInSubheading}
         </p>
 
-        {hasTelegramWidget && (
-          <TelegramLoginButton botUsername={botUsername!} authUrl={authUrl} />
-        )}
-
-        {!hasTelegramWidget && !devLoginEnabled && (
-          <div
-            style={{
-              padding: '12px 16px',
-              borderRadius: 10,
-              background: 'var(--accent-soft)',
-              border: '1px solid #f3b79b',
-              fontSize: 13,
-              color: '#9a3410',
-              textAlign: 'left',
-            }}
-          >
-            Set <code>NEXT_PUBLIC_TELEGRAM_BOT_USERNAME</code> to enable Telegram login.
-          </div>
-        )}
+        <TelegramLoginButton />
 
         {devLoginEnabled && (
           <>
-            {hasTelegramWidget && (
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  margin: '20px 0 16px',
-                  color: 'var(--muted)',
-                  fontSize: 12,
-                }}
-              >
-                <hr style={{ flex: 1, border: 'none', borderTop: '1px solid var(--line)' }} />
-                {t.orDevLogin}
-                <hr style={{ flex: 1, border: 'none', borderTop: '1px solid var(--line)' }} />
-              </div>
-            )}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                margin: '20px 0 16px',
+                color: 'var(--muted)',
+                fontSize: 12,
+              }}
+            >
+              <hr style={{ flex: 1, border: 'none', borderTop: '1px solid var(--line)' }} />
+              {t.orDevLogin}
+              <hr style={{ flex: 1, border: 'none', borderTop: '1px solid var(--line)' }} />
+            </div>
             <DevLoginForm />
           </>
         )}
