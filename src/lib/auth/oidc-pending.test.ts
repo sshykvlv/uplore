@@ -1,4 +1,7 @@
-import { describe, it, expect } from 'vitest'
+import { it, expect } from 'vitest'
+
+process.env.SESSION_SECRET = 'test-secret'
+
 import { signPending, verifyPending } from '@/lib/auth/oidc-pending'
 
 it('round-trips a signed payload', () => {
