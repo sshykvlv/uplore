@@ -1,53 +1,45 @@
-'use client'
-
-import { useEffect, useRef } from 'react'
-
 interface TelegramLoginButtonProps {
-  botUsername: string
-  /** Absolute callback URL the widget redirects to after auth. */
-  authUrl: string
+  /**
+   * @deprecated Unused since the OIDC migration — kept optional so existing
+   * call sites that still pass it don't need to change. Login always starts
+   * at /api/auth/telegram/start.
+   */
+  botUsername?: string
+  /** @deprecated Unused since the OIDC migration, see botUsername above. */
+  authUrl?: string
 }
 
 /**
- * Telegram Login Widget, embedded the SPA-safe way.
+ * Telegram login entry point.
  *
- * The widget is a <script> from telegram.org that, when it runs, replaces
- * itself with the login-button iframe. A <script> injected via
- * dangerouslySetInnerHTML is parsed but NOT executed by the browser, so the
- * button only appeared on a full page load and silently vanished on client-side
- * navigation (clicking the header "Sign in" <Link>). Creating the script element
- * imperatively in an effect makes it execute on every mount, however the user
- * arrived at this page.
+ * Previously rendered the Telegram Login Widget (an injected <script> that
+ * replaces itself with an iframe). That flow is retired in favour of
+ * Telegram Login via OIDC: this is now a plain link that starts the
+ * authorize redirect at /api/auth/telegram/start, which sets a pending
+ * cookie and 302s to Telegram. No client-side JS needed.
  */
-export default function TelegramLoginButton({ botUsername, authUrl }: TelegramLoginButtonProps) {
-  const ref = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const container = ref.current
-    if (!container) return
-
-    // Clear any prior render (e.g. fast refresh / re-mount) to avoid duplicates.
-    container.innerHTML = ''
-
-    const script = document.createElement('script')
-    script.src = 'https://telegram.org/js/telegram-widget.js?22'
-    script.async = true
-    script.setAttribute('data-telegram-login', botUsername)
-    script.setAttribute('data-size', 'large')
-    script.setAttribute('data-radius', '20')
-    script.setAttribute('data-auth-url', authUrl)
-    script.setAttribute('data-request-access', 'write')
-    container.appendChild(script)
-
-    return () => {
-      container.innerHTML = ''
-    }
-  }, [botUsername, authUrl])
-
+export default function TelegramLoginButton(_props: TelegramLoginButtonProps) {
   return (
-    <div
-      ref={ref}
-      style={{ display: 'flex', justifyContent: 'center', minHeight: 48 }}
-    />
+    <div style={{ display: 'flex', justifyContent: 'center', minHeight: 48 }}>
+      <a
+        href="/api/auth/telegram/start"
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 8,
+          width: '100%',
+          padding: '12px 20px',
+          borderRadius: 20,
+          background: '#2AABEE',
+          color: '#fff',
+          fontWeight: 600,
+          fontSize: 15,
+          textDecoration: 'none',
+        }}
+      >
+        Log in with Telegram
+      </a>
+    </div>
   )
 }
