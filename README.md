@@ -5,7 +5,9 @@ A Hacker-News-style idea board you can self-host in one command.
 Post ideas, upvote or downvote them, react with emoji, and discuss in comments.
 The best ideas float to the top by net score — no time-decay, no algorithm, just community signal.
 
-> **Live instance:** [uplore.ykv.lv](https://uplore.ykv.lv)
+> **Status: frozen (2026-10-07).** The Norm team instance (`ideas.norm.place`, alias `uplore.ykv.lv`)
+> saw no activity after 2026-07-14 and was removed from the server. The code still works and can be
+> self-hosted as described below. See [Frozen instance](#frozen-instance-norm) for how to bring it back.
 
 ---
 
@@ -185,6 +187,34 @@ Locale is resolved in this order:
 The switcher appears in the main header and also below the `/login` and `/gate` cards (so users can pick their language before authenticating). Only UI chrome is translated — idea bodies and comments are always displayed as authored.
 
 No new environment variables are needed.
+
+---
+
+## Frozen instance (Norm)
+
+The Norm deployment was frozen on 2026-10-07 because nobody used it after 2026-07-14
+(9 ideas, 8 users, 10 votes, 7 comments in total).
+
+- **Code:** git tag `archive-2026-10` marks the last deployed commit.
+- **Data and config:** the owner's Mac keeps `~/Documents/Norm-Data/archive/uplore-2026-10-07/`.
+  It holds `uplore-arch.tgz` (SHA256 `742bb8b6…f7c5`) with a consistent `uplore.db` snapshot
+  (integrity checked), the production `.env` files and both nginx vhosts. The `.env` files contain
+  secrets: do not copy them into the repo.
+- **Removed from the Hetzner host:** the container, the `uplore:latest` image, the `uplore_uplore_data`
+  volume, `~/uplore`, the `ideas.norm.place` and `uplore.ykv.lv` nginx vhosts, and their certbot
+  certificates. The DNS A records still point at the host.
+
+To bring it back:
+
+1. On the host, run `git clone https://github.com/sshykvlv/uplore ~/uplore && git -C ~/uplore checkout archive-2026-10`.
+   Copy the archived `.env` there.
+2. Create the volume and load the snapshot:
+   `docker volume create uplore_uplore_data`, then
+   `docker run --rm -v uplore_uplore_data:/d -v "$PWD":/s alpine sh -c 'cp /s/uplore.db /d/ && chown 1001 /d/uplore.db'`.
+3. Run `docker compose up -d --build --force-recreate` and check `curl 127.0.0.1:3150/api/health`.
+4. Restore the vhost into `/etc/nginx/sites-available/`, then issue the certificate with
+   `sudo certbot --nginx -d ideas.norm.place`, run `nginx -t` and reload nginx.
+5. Telegram OIDC: the redirect URI registered in BotFather must still match `PUBLIC_URL`.
 
 ---
 
